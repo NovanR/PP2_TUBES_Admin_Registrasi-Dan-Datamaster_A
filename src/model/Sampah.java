@@ -1,16 +1,19 @@
 package model;
 
 public class Sampah {
-    private String idSampah;
+    private int idSampah;
     private String kategoriSampah;
     private int berat;
     private int poin;
-    private String idMasyarakat;
-    private String idTps;
-    private String idKurir;
+    private int idMasyarakat;
+    private int idTps;
+    private int idKurir;
 
-    public Sampah(String idSampah, String kategoriSampah, int berat, int poin, String idMasyarakat, String idTps,
-            String idKurir) {
+
+    public Sampah(int idSampah, String kategoriSampah, int berat, int poin, int idMasyarakat, int idTps, int idKurir) {
+
+     {
+
         this.idSampah = idSampah;
         this.kategoriSampah = kategoriSampah;
         this.berat = berat;
@@ -20,11 +23,11 @@ public class Sampah {
         this.idKurir = idKurir;
     }
 
-    public String getIdSampah() {
+    public int getIdSampah() {
         return idSampah;
     }
 
-    public void setIdSampah(String idSampah) {
+    public void setIdSampah(int idSampah) {
         this.idSampah = idSampah;
     }
 
@@ -52,27 +55,27 @@ public class Sampah {
         this.poin = poin;
     }
 
-    public String getIdMasyarakat() {
+    public int getIdMasyarakat() {
         return idMasyarakat;
     }
 
-    public void setIdMasyarakat(String idMasyarakat) {
+    public void setIdMasyarakat(int idMasyarakat) {
         this.idMasyarakat = idMasyarakat;
     }
 
-    public String getIdTps() {
+    public int getIdTps() {
         return idTps;
     }
 
-    public void setIdTps(String idTps) {
+    public void setIdTps(int idTps) {
         this.idTps = idTps;
     }
 
-    public String getIdKurir() {
+    public int getIdKurir() {
         return idKurir;
     }
 
-    public void setIdKurir(String idKurir) {
+    public void setIdKurir(int idKurir) {
         this.idKurir = idKurir;
     }
 }

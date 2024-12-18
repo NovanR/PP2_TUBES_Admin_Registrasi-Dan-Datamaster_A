@@ -15,7 +15,7 @@ public interface KurirMapper {
 
     // READ: Mengambil data kurir berdasarkan ID
     @Select("SELECT * FROM kurir WHERE idKurir = #{idKurir}")
-    Kurir getKurirById(@Param("idKurir") String idKurir);
+    Kurir getKurirById(@Param("idKurir") int idKurir);
 
     // UPDATE: Memperbarui data kurir berdasarkan ID
     @Update("UPDATE kurir SET namaKurir = #{namaKurir}, jenisKelamin = #{jenisKelamin}, tanggalLahir = #{tanggalLahir}, noHP = #{noHP}, alamat = #{alamat}, image = #{image} WHERE idKurir = #{idKurir}")
@@ -23,5 +23,5 @@ public interface KurirMapper {
 
     // DELETE: Menghapus data kurir berdasarkan ID
     @Delete("DELETE FROM kurir WHERE idKurir = #{idKurir}")
-    void deleteKurir(@Param("idKurir") String idKurir);
+    void deleteKurir(@Param("idKurir") int idKurir);
 }

@@ -3,7 +3,7 @@ package model;
 import java.util.Date;
 
 public class Masyarakat {
-    private String idMasyarakat;
+    private int idMasyarakat;
     private String namaMasyarakat;
     private String jenisKelamin;
     private Date tanggalLahir;
@@ -15,7 +15,7 @@ public class Masyarakat {
     }
     private Status status;
 
-    public Masyarakat(String idMasyarakat, String namaMasyarakat, String jenisKelamin, Date tanggalLahir, String noHP, String alamat, String image, Status status) {
+    public Masyarakat(int idMasyarakat, String namaMasyarakat, String jenisKelamin, Date tanggalLahir, String noHP, String alamat, String image, Status status) {
         this.idMasyarakat = idMasyarakat;
         this.namaMasyarakat = namaMasyarakat;
         this.jenisKelamin = jenisKelamin;
@@ -26,11 +26,11 @@ public class Masyarakat {
         this.status = status;
     }
 
-    public String getIdMasyarakat() {
+    public int getIdMasyarakat() {
         return idMasyarakat;
     }
 
-    public void setIdMasyarakat(String idMasyarakat) {
+    public void setIdMasyarakat(int idMasyarakat) {
         this.idMasyarakat = idMasyarakat;
     }
 

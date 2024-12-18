@@ -3,7 +3,7 @@ package model;
 import java.util.Date;
 
 public class Kurir {
-    private String idKurir;
+    private int idKurir;
     private String namaKurir;
     private String jenisKelamin;
     private Date tanggalLahir;
@@ -15,7 +15,7 @@ public class Kurir {
     }
     private Status status;
 
-    public Kurir(String idKurir, String namaKurir, String jenisKelamin, Date tanggalLahir, String noHP, String alamat, String image, Status status) {
+    public Kurir(int idKurir, String namaKurir, String jenisKelamin, Date tanggalLahir, String noHP, String alamat, String image, Status status) {
         this.idKurir = idKurir;
         this.namaKurir = namaKurir;
         this.jenisKelamin = jenisKelamin;
@@ -26,11 +26,11 @@ public class Kurir {
         this.status = status;
     }
 
-    public String getIdKurir() {
+    public int getIdKurir() {
         return idKurir;
     }
 
-    public void setIdKurir(String idKurir) {
+    public void setIdKurir(int idKurir) {
         this.idKurir = idKurir;
     }
 

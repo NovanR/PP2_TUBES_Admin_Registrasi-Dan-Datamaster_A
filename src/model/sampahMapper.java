@@ -15,7 +15,7 @@ public interface sampahMapper {
 
     // READ: Mengambil data sampah berdasarkan ID
     @Select("SELECT * FROM sampah WHERE idSampah = #{idSampah}")
-    Sampah getSampahById(@Param("idSampah") String idSampah);
+    Sampah getSampahById(@Param("idSampah") int idSampah);
 
     // UPDATE: Memperbarui data sampah berdasarkan ID
     @Update("UPDATE sampah SET kategoriSampah = #{kategoriSampah}, berat = #{berat}, poin = #{poin}, idMasyarakat = #{idMasyarakat}, idTps = #{idTps}, idKurir = #{idKurir} WHERE idSampah = #{idSampah}")
@@ -23,5 +23,5 @@ public interface sampahMapper {
 
     // DELETE: Menghapus data sampah berdasarkan ID
     @Delete("DELETE FROM sampah WHERE idSampah = #{idSampah}")
-    void deleteSampah(@Param("idSampah") String idSampah);
+    void deleteSampah(@Param("idSampah") int idSampah);
 }
