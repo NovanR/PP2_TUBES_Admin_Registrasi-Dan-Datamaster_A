@@ -9,7 +9,8 @@ public class Sampah {
     private String idTps;
     private String idKurir;
 
-    public Sampah(String idSampah, String kategoriSampah, int berat, int poin, String idMasyarakat, String idTps, String idKurir) {
+    public Sampah(String idSampah, String kategoriSampah, int berat, int poin, String idMasyarakat, String idTps,
+            String idKurir) {
         this.idSampah = idSampah;
         this.kategoriSampah = kategoriSampah;
         this.berat = berat;
@@ -74,5 +75,4 @@ public class Sampah {
     public void setIdKurir(String idKurir) {
         this.idKurir = idKurir;
     }
-    
 }
