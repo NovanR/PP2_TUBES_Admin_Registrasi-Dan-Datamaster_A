@@ -9,7 +9,11 @@ public class Sampah {
     private int idTps;
     private int idKurir;
 
+
     public Sampah(int idSampah, String kategoriSampah, int berat, int poin, int idMasyarakat, int idTps, int idKurir) {
+
+     {
+
         this.idSampah = idSampah;
         this.kategoriSampah = kategoriSampah;
         this.berat = berat;
@@ -74,6 +78,4 @@ public class Sampah {
     public void setIdKurir(int idKurir) {
         this.idKurir = idKurir;
     }
-
-    
 }
