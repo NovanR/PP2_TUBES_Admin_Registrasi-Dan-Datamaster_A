@@ -15,7 +15,7 @@ public interface MasyarakatMapper {
 
     // READ: Mengambil data masyarakat berdasarkan ID
     @Select("SELECT * FROM masyarakat WHERE idMasyarakat = #{idMasyarakat}")
-    Masyarakat getMasyarakatById(@Param("idMasyarakat") String idMasyarakat);
+    Masyarakat getMasyarakatById(@Param("idMasyarakat") int idMasyarakat);
 
     // UPDATE: Memperbarui data masyarakat berdasarkan ID
     @Update("UPDATE masyarakat SET namaMasyarakat = #{namaMasyarakat}, jenisKelamin = #{jenisKelamin}, tanggalLahir = #{tanggalLahir}, noHP = #{noHP}, alamat = #{alamat}, image = #{image} WHERE idMasyarakat = #{idMasyarakat}")
@@ -23,5 +23,5 @@ public interface MasyarakatMapper {
 
     // DELETE: Menghapus data masyarakat berdasarkan ID
     @Delete("DELETE FROM masyarakat WHERE idMasyarakat = #{idMasyarakat}")
-    void deleteMasyarakat(@Param("idMasyarakat") String idMasyarakat);
+    void deleteMasyarakat(@Param("idMasyarakat") int idMasyarakat);
 }

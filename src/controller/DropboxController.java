@@ -33,10 +33,10 @@ public class DropboxController {
     }
 
     // READ: Mendapatkan Dropbox berdasarkan ID
-    public Dropbox getDropboxById(String idTps) {
+    public Dropbox getDropboxById(int idTps) {
         try (SqlSession session = MyBatisUtil.getSqlSessionFactory().openSession()) {
             DropboxMapper mapper = session.getMapper(DropboxMapper.class);
-            return mapper.getDropboxById(Integer.parseInt(idTps));
+            return mapper.getDropboxById(idTps);
         } catch (Exception e) {
             System.err.println("Gagal mendapatkan Dropbox dengan ID: " + idTps + ". Error: " + e.getMessage());
             return null;
@@ -56,10 +56,10 @@ public class DropboxController {
     }
 
     // DELETE: Menghapus Dropbox berdasarkan ID
-    public void deleteDropbox(String idTps) {
+    public void deleteDropbox(int idTps) {
         try (SqlSession session = MyBatisUtil.getSqlSessionFactory().openSession()) {
             DropboxMapper mapper = session.getMapper(DropboxMapper.class);
-            mapper.deleteDropbox(Integer.parseInt(idTps));
+            mapper.deleteDropbox(idTps);
             session.commit();
             System.out.println("Dropbox berhasil dihapus.");
         } catch (Exception e) {

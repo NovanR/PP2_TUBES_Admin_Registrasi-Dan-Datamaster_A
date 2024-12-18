@@ -1,23 +1,23 @@
 package model;
 
 public class Dropbox {
-    private String idTps;
+    private int idTps;
     private String namaTps;
     private String noHpTps;
     private String alamatTps;
 
-    public Dropbox(String idTps, String namaTps, String noHpTps, String alamatTps) {
+    public Dropbox(int idTps, String namaTps, String noHpTps, String alamatTps) {
         this.idTps = idTps;
         this.namaTps = namaTps;
         this.noHpTps = noHpTps;
         this.alamatTps = alamatTps;
     }
 
-    public String getIdTps() {
+    public int getIdTps() {
         return idTps;
     }
 
-    public void setIdTps(String idTps) {
+    public void setIdTps(int idTps) {
         this.idTps = idTps;
     }
 
@@ -44,5 +44,5 @@ public class Dropbox {
     public void setAlamatTps(String alamatTps) {
         this.alamatTps = alamatTps;
     }
-    
+
 }
