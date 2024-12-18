@@ -4,146 +4,58 @@ import controller.DropboxController;
 import model.Dropbox;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
 public class DropboxView extends JFrame {
 
-    private DropboxController controller;
-    private JTable table;
-    private DefaultTableModel tableModel;
-    private JTextField txtIdTps, txtNamaTps, txtNoHpTps, txtAlamatTps;
-    private JButton btnAdd, btnUpdate, btnDelete, btnRefresh;
+    private JTable dropboxTable;
+    private JScrollPane scrollPane;
+
+    private DropboxController dropboxController;
 
     public DropboxView() {
-        controller = new DropboxController();
-        initializeUI();
-        loadDataToTable();
-    }
-
-    private void initializeUI() {
-        // Set up JFrame
-        setTitle("Dropbox Management");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        dropboxController = new DropboxController();
+        setTitle("Dropbox List");
         setLayout(new BorderLayout());
 
-        // Table Model and JTable
-        tableModel = new DefaultTableModel(new String[]{"ID", "Nama TPS", "No HP", "Alamat"}, 0);
-        table = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(table);
-
-        // Input Form Panel
-        JPanel inputPanel = new JPanel(new GridLayout(5, 2, 5, 5));
-        inputPanel.setBorder(BorderFactory.createTitledBorder("Input Data"));
-
-        txtIdTps = new JTextField();
-        txtNamaTps = new JTextField();
-        txtNoHpTps = new JTextField();
-        txtAlamatTps = new JTextField();
-
-        inputPanel.add(new JLabel("ID TPS:"));
-        inputPanel.add(txtIdTps);
-        inputPanel.add(new JLabel("Nama TPS:"));
-        inputPanel.add(txtNamaTps);
-        inputPanel.add(new JLabel("No HP TPS:"));
-        inputPanel.add(txtNoHpTps);
-        inputPanel.add(new JLabel("Alamat TPS:"));
-        inputPanel.add(txtAlamatTps);
-
-        // Buttons
-        btnAdd = new JButton("Add");
-        btnUpdate = new JButton("Update");
-        btnDelete = new JButton("Delete");
-        btnRefresh = new JButton("Refresh");
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(btnAdd);
-        buttonPanel.add(btnUpdate);
-        buttonPanel.add(btnDelete);
-        buttonPanel.add(btnRefresh);
-
-        // Add components to JFrame
+        // Table setup
+        dropboxTable = new JTable();
+        scrollPane = new JScrollPane(dropboxTable);
         add(scrollPane, BorderLayout.CENTER);
-        add(inputPanel, BorderLayout.NORTH);
-        add(buttonPanel, BorderLayout.SOUTH);
 
-        // Add action listeners
-        btnAdd.addActionListener(e -> addDropbox());
-        btnUpdate.addActionListener(e -> updateDropbox());
-        btnDelete.addActionListener(e -> deleteDropbox());
-        btnRefresh.addActionListener(e -> loadDataToTable());
+        // Load data into the table
+        loadDropboxData();
 
-        // Show JFrame
-        setVisible(true);
+        // Frame settings
+        setSize(600, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
     }
 
-    private void loadDataToTable() {
-        // Clear table
-        tableModel.setRowCount(0);
+    private void loadDropboxData() {
+        List<Dropbox> dropboxes = dropboxController.getAllDropbox();
 
-        // Get data from controller
-        List<Dropbox> dropboxList = controller.getAllDropbox();
-        if (dropboxList != null) {
-            for (Dropbox dropbox : dropboxList) {
-                tableModel.addRow(new Object[]{
-                        dropbox.getIdTps(),
-                        dropbox.getNamaTps(),
-                        dropbox.getNoHpTps(),
-                        dropbox.getAlamatTps()
-                });
-            }
+        // Prepare data for JTable
+        String[] columnNames = {"ID", "Nama TPS", "No. HP", "Alamat TPS"};
+        Object[][] data = new Object[dropboxes.size()][4];
+
+        for (int i = 0; i < dropboxes.size(); i++) {
+            Dropbox dropbox = dropboxes.get(i);
+            data[i][0] = dropbox.getIdTps();
+            data[i][1] = dropbox.getNamaTps();
+            data[i][2] = dropbox.getNoHpTps();
+            data[i][3] = dropbox.getAlamatTps();
         }
+
+        // Set data to table
+        dropboxTable.setModel(new javax.swing.table.DefaultTableModel(data, columnNames));
     }
 
-    private void addDropbox() {
-        String idTps = txtIdTps.getText();
-        String namaTps = txtNamaTps.getText();
-        String noHpTps = txtNoHpTps.getText();
-        String alamatTps = txtAlamatTps.getText();
-
-        if (idTps.isEmpty() || namaTps.isEmpty() || noHpTps.isEmpty() || alamatTps.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Semua field harus diisi!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        Dropbox dropbox = new Dropbox(idTps, namaTps, noHpTps, alamatTps);
-        controller.createDropbox(dropbox);
-        loadDataToTable();
-    }
-
-    private void updateDropbox() {
-        int selectedRow = table.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Pilih data yang ingin diperbarui!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        String idTps = tableModel.getValueAt(selectedRow, 0).toString();
-        String namaTps = txtNamaTps.getText();
-        String noHpTps = txtNoHpTps.getText();
-        String alamatTps = txtAlamatTps.getText();
-
-        if (namaTps.isEmpty() || noHpTps.isEmpty() || alamatTps.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Semua field harus diisi!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        Dropbox dropbox = new Dropbox(idTps, namaTps, noHpTps, alamatTps);
-        controller.updateDropbox(dropbox);
-        loadDataToTable();
-    }
-
-    private void deleteDropbox() {
-        int selectedRow = table.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Pilih data yang ingin dihapus!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        String idTps = tableModel.getValueAt(selectedRow, 0).toString();
-        controller.deleteDropbox(idTps);
-        loadDataToTable();
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            DropboxView view = new DropboxView();
+            view.setVisible(true);
+        });
     }
 }
