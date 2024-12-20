@@ -1,7 +1,10 @@
 package controller;
 
-import model.Masyarakat;
-import model.MasyarakatMapper;
+
+import model.Kurir;
+import model.KurirMapper;
+
+
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -10,10 +13,10 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import java.io.InputStream;
 import java.util.List;
 
-public class MasyarakatController {
+public class KurirController {
     private SqlSessionFactory sqlSessionFactory;
 
-    public MasyarakatController() {
+    public KurirController() {
         try {
             String resource = "mybatis-config.xml";
             InputStream inputStream = Resources.getResourceAsStream(resource);
@@ -23,17 +26,17 @@ public class MasyarakatController {
         }
     }
 
-    public List<Masyarakat> getAllMasyarakat() {
+    public List<Kurir> getAllKurir() {
         try (SqlSession session = sqlSessionFactory.openSession()) {
-            MasyarakatMapper mapper = session.getMapper(MasyarakatMapper.class);
-            return mapper.getAllMasyarakat();
+            KurirMapper mapper = session.getMapper(KurirMapper.class);
+            return mapper.getAllKurir();
         }
     }
 
-    public Masyarakat getMasyarakatById(int id) {
+    public Kurir getKurirById(int id) {
         try (SqlSession session = sqlSessionFactory.openSession()) {
-            MasyarakatMapper mapper = session.getMapper(MasyarakatMapper.class);
-            return mapper.getMasyarakatById(id);
+            KurirMapper mapper = session.getMapper(KurirMapper.class);
+            return mapper.getKurirById(id);
         }
     }
 }
