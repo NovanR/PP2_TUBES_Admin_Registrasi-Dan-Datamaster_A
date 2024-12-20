@@ -15,7 +15,8 @@
         </environment>
     </environments>
     <mappers>
-        <mapper class="model.UserMapper"/>
+        <mapper class="model.MasyarakatMapper"/>
+        <mapper class="model.DropboxMapper"/>
         <package name="mapper" />
     </mappers>
 </configuration>

@@ -1,70 +1,39 @@
 
 package controller;
 
-import model.Dropbox;
-import model.DropboxMapper;
-import org.apache.ibatis.session.SqlSession;
-import model.MyBatisUtil;
-
+import java.io.IOException;
+import java.io.InputStream;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.*;
 import java.util.List;
 
-public class DropboxController {
+import model.Dropbox;
+import model.DropboxMapper;
 
-    // CREATE: Menambahkan Dropbox baru
-    public void createDropbox(Dropbox dropbox) {
-        try (SqlSession session = MyBatisUtil.getSqlSessionFactory().openSession()) {
-            DropboxMapper mapper = session.getMapper(DropboxMapper.class);
-            mapper.insertDropbox(dropbox);
-            session.commit();
-            System.out.println("Dropbox berhasil ditambahkan.");
-        } catch (Exception e) {
-            System.err.println("Gagal menambahkan Dropbox: " + e.getMessage());
+public class DropboxController {
+    private SqlSessionFactory sqlSessionFactory;
+
+    public DropboxController() {
+        try {
+            String resource = "mybatis-config.xml";
+            InputStream inputStream = Resources.getResourceAsStream(resource);
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    // READ: Mendapatkan semua Dropbox
     public List<Dropbox> getAllDropbox() {
-        try (SqlSession session = MyBatisUtil.getSqlSessionFactory().openSession()) {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
             DropboxMapper mapper = session.getMapper(DropboxMapper.class);
             return mapper.getAllDropbox();
-        } catch (Exception e) {
-            System.err.println("Gagal mendapatkan daftar Dropbox: " + e.getMessage());
-            return null;
         }
     }
 
-    // READ: Mendapatkan Dropbox berdasarkan ID
-    public Dropbox getDropboxById(int idTps) {
-        try (SqlSession session = MyBatisUtil.getSqlSessionFactory().openSession()) {
+    public Dropbox getDropboxById(int id) {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
             DropboxMapper mapper = session.getMapper(DropboxMapper.class);
-            return mapper.getDropboxById(idTps);
-        } catch (Exception e) {
-            System.err.println("Gagal mendapatkan Dropbox dengan ID: " + idTps + ". Error: " + e.getMessage());
-            return null;
-        }
-    }
-
-    // UPDATE: Memperbarui Dropbox berdasarkan ID
-    public void updateDropbox(Dropbox dropbox) {
-        try (SqlSession session = MyBatisUtil.getSqlSessionFactory().openSession()) {
-            DropboxMapper mapper = session.getMapper(DropboxMapper.class);
-            mapper.updateDropbox(dropbox);
-            session.commit();
-            System.out.println("Dropbox berhasil diperbarui.");
-        } catch (Exception e) {
-            System.err.println("Gagal memperbarui Dropbox: " + e.getMessage());
-        }
-    }
-
-    // DELETE: Menghapus Dropbox berdasarkan ID
-    public void deleteDropbox(int idTps) {
-        try (SqlSession session = MyBatisUtil.getSqlSessionFactory().openSession()) {
-            DropboxMapper mapper = session.getMapper(DropboxMapper.class);
-            mapper.deleteDropbox(idTps);
-            session.commit();
-            System.out.println("Dropbox berhasil dihapus.");
-        } catch (Exception e) {
-            System.err.println("Gagal menghapus Dropbox dengan ID: " + idTps + ". Error: " + e.getMessage());
+            return mapper.getDropboxById(id);
         }
     }
 }
