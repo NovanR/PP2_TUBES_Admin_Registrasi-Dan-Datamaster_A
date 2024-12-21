@@ -72,38 +72,56 @@ public class MasyarakatView extends JFrame {
     }
 
     // ADD MASYARAKAT
-
     private void addMasyarakat() {
         // Dialog untuk menambah data baru
         JTextField namaField = new JTextField();
-        JTextField jenisKelaminField = new JTextField();
+        JRadioButton lakiButton = new JRadioButton("Laki-laki");
+        JRadioButton perempuanButton = new JRadioButton("Perempuan");
+        ButtonGroup genderGroup = new ButtonGroup();
+        genderGroup.add(lakiButton);
+        genderGroup.add(perempuanButton);
+
         JTextField tanggalLahirField = new JTextField();
         JTextField noHPField = new JTextField();
         JTextField alamatField = new JTextField();
         JTextField imageField = new JTextField();
-        JTextField statusField = new JTextField();
+
+        JRadioButton terimaButton = new JRadioButton("Terima");
+        JRadioButton tolakButton = new JRadioButton("Tolak");
+        ButtonGroup statusGroup = new ButtonGroup();
+        statusGroup.add(terimaButton);
+        statusGroup.add(tolakButton);
 
         Object[] message = {
                 "Nama:", namaField,
-                "Jenis Kelamin:", jenisKelaminField,
+                "Jenis Kelamin:", lakiButton, perempuanButton,
                 "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
                 "No HP:", noHPField,
                 "Alamat:", alamatField,
                 "Image Path:", imageField,
-                "Status:", statusField
+                "Status:", terimaButton, tolakButton
         };
 
         int option = JOptionPane.showConfirmDialog(null, message, "Add Masyarakat", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
+            String jenisKelamin = lakiButton.isSelected() ? "Laki-laki"
+                    : perempuanButton.isSelected() ? "Perempuan" : "";
+            String status = terimaButton.isSelected() ? "DISETUJUI" : tolakButton.isSelected() ? "DITOLAK" : "";
+
+            if (jenisKelamin.isEmpty() || status.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Silakan lengkapi semua pilihan!");
+                return;
+            }
+
             Masyarakat masyarakat = new Masyarakat(
                     0, // ID akan digenerate oleh database
                     namaField.getText(),
-                    jenisKelaminField.getText(),
+                    jenisKelamin,
                     java.sql.Date.valueOf(tanggalLahirField.getText()),
                     noHPField.getText(),
                     alamatField.getText(),
                     imageField.getText(),
-                    Masyarakat.Status.valueOf(statusField.getText().toUpperCase()));
+                    status);
             controller.addMasyarakat(masyarakat);
             JOptionPane.showMessageDialog(null, "Data berhasil ditambahkan!");
         }
@@ -119,34 +137,67 @@ public class MasyarakatView extends JFrame {
 
         int id = (int) table.getValueAt(selectedRow, 0);
         JTextField namaField = new JTextField((String) table.getValueAt(selectedRow, 1));
-        JTextField jenisKelaminField = new JTextField((String) table.getValueAt(selectedRow, 2));
+        JRadioButton lakiButton = new JRadioButton("Laki-laki");
+        JRadioButton perempuanButton = new JRadioButton("Perempuan");
+        ButtonGroup genderGroup = new ButtonGroup();
+        genderGroup.add(lakiButton);
+        genderGroup.add(perempuanButton);
+
+        String jenisKelamin = (String) table.getValueAt(selectedRow, 2);
+        if ("Laki-laki".equals(jenisKelamin)) {
+            lakiButton.setSelected(true);
+        } else if ("Perempuan".equals(jenisKelamin)) {
+            perempuanButton.setSelected(true);
+        }
+
         JTextField tanggalLahirField = new JTextField(table.getValueAt(selectedRow, 3).toString());
         JTextField noHPField = new JTextField((String) table.getValueAt(selectedRow, 4));
         JTextField alamatField = new JTextField((String) table.getValueAt(selectedRow, 5));
         JTextField imageField = new JTextField((String) table.getValueAt(selectedRow, 6));
-        JTextField statusField = new JTextField(table.getValueAt(selectedRow, 7).toString());
+
+        JRadioButton terimaButton = new JRadioButton("Terima");
+        JRadioButton tolakButton = new JRadioButton("Tolak");
+        ButtonGroup statusGroup = new ButtonGroup();
+        statusGroup.add(terimaButton);
+        statusGroup.add(tolakButton);
+
+        String currentStatus = table.getValueAt(selectedRow, 7).toString();
+        if ("Terima".equalsIgnoreCase(currentStatus)) {
+            terimaButton.setSelected(true);
+        } else if ("Tolak".equalsIgnoreCase(currentStatus)) {
+            tolakButton.setSelected(true);
+        }
 
         Object[] message = {
                 "Nama:", namaField,
-                "Jenis Kelamin:", jenisKelaminField,
+                "Jenis Kelamin:", lakiButton, perempuanButton,
                 "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
                 "No HP:", noHPField,
                 "Alamat:", alamatField,
                 "Image Path:", imageField,
-                "Status (DISETUJUI/DITOLAK/PENDING):", statusField
+                "Status:", terimaButton, tolakButton
         };
 
         int option = JOptionPane.showConfirmDialog(null, message, "Update Masyarakat", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
+            String newJenisKelamin = lakiButton.isSelected() ? "Laki-laki"
+                    : perempuanButton.isSelected() ? "Perempuan" : "";
+            String newStatus = terimaButton.isSelected() ? "Terima" : tolakButton.isSelected() ? "Tolak" : "";
+
+            if (newJenisKelamin.isEmpty() || newStatus.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Silakan lengkapi semua pilihan!");
+                return;
+            }
+
             Masyarakat masyarakat = new Masyarakat(
                     id,
                     namaField.getText(),
-                    jenisKelaminField.getText(),
+                    newJenisKelamin,
                     java.sql.Date.valueOf(tanggalLahirField.getText()),
                     noHPField.getText(),
                     alamatField.getText(),
                     imageField.getText(),
-                    Masyarakat.Status.valueOf(statusField.getText().toUpperCase()));
+                    newStatus);
             controller.updateMasyarakat(masyarakat);
             JOptionPane.showMessageDialog(null, "Data berhasil diperbarui!");
         }
