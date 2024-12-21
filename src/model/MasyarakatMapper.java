@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.*;
 public interface MasyarakatMapper {
 
     // CREATE: Menambahkan data baru ke tabel masyarakat
-    @Insert("INSERT INTO masyarakat (idMasyarakat, namaMasyarakat, jenisKelamin, tanggalLahir, noHP, alamat, image) VALUES (#{idMasyarakat}, #{namaMasyarakat}, #{jenisKelamin}, #{tanggalLahir}, #{noHP}, #{alamat}, #{image})")
+    @Insert("INSERT INTO masyarakat (idMasyarakat, namaMasyarakat, jenisKelamin, tanggalLahir, noHP, alamat, image, status) VALUES (#{idMasyarakat}, #{namaMasyarakat}, #{jenisKelamin}, #{tanggalLahir}, #{noHP}, #{alamat}, #{image}, #{status})")
     void insertMasyarakat(Masyarakat masyarakat);
 
     // READ: Mengambil semua data dari tabel masyarakat
@@ -18,7 +18,7 @@ public interface MasyarakatMapper {
     Masyarakat getMasyarakatById(@Param("idMasyarakat") int idMasyarakat);
 
     // UPDATE: Memperbarui data masyarakat berdasarkan ID
-    @Update("UPDATE masyarakat SET namaMasyarakat = #{namaMasyarakat}, jenisKelamin = #{jenisKelamin}, tanggalLahir = #{tanggalLahir}, noHP = #{noHP}, alamat = #{alamat}, image = #{image} WHERE idMasyarakat = #{idMasyarakat}")
+    @Update("UPDATE masyarakat SET namaMasyarakat = #{namaMasyarakat}, jenisKelamin = #{jenisKelamin}, tanggalLahir = #{tanggalLahir}, noHP = #{noHP}, alamat = #{alamat}, image = #{image}, status = #{status} WHERE idMasyarakat = #{idMasyarakat}")
     void updateMasyarakat(Masyarakat masyarakat);
 
     // DELETE: Menghapus data masyarakat berdasarkan ID
