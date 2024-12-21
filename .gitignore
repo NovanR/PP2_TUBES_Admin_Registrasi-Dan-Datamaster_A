@@ -1,3 +1,6 @@
 /bin/
 bin/
 /bin
+/bin/view/
+/bin/controller/
+/bin/model/

@@ -55,13 +55,16 @@ public class MasyarakatView extends JFrame {
         JButton updateButton = new JButton("Update");
         updateButton.addActionListener(e -> updateMasyarakat(table));
 
+        JButton deleteButton = new JButton("Delete");
+        deleteButton.addActionListener(e -> deleteMasyarakat(table));
+
         JButton refreshButton = new JButton("Refresh");
         refreshButton.addActionListener(e -> refreshTable(table));
 
         JPanel footerPanel = new JPanel();
         footerPanel.add(addButton);
         footerPanel.add(updateButton);
-        // footerPanel.add(deleteButton);
+        footerPanel.add(deleteButton);
         footerPanel.add(refreshButton);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
@@ -87,7 +90,7 @@ public class MasyarakatView extends JFrame {
                 "No HP:", noHPField,
                 "Alamat:", alamatField,
                 "Image Path:", imageField,
-                "Status (DISETUJUI/DITOLAK/PENDING):", statusField
+                "Status:", statusField
         };
 
         int option = JOptionPane.showConfirmDialog(null, message, "Add Masyarakat", JOptionPane.OK_CANCEL_OPTION);
@@ -169,6 +172,24 @@ public class MasyarakatView extends JFrame {
         table.setModel(new javax.swing.table.DefaultTableModel(data, new String[] {
                 "ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "Status"
         }));
+    }
+
+    // DELETE
+    private void deleteMasyarakat(JTable table) {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(null, "Pilih baris yang akan dihapus.");
+            return;
+        }
+
+        int id = (int) table.getValueAt(selectedRow, 0);
+        int option = JOptionPane.showConfirmDialog(null, "Apakah Anda yakin ingin menghapus data ini?",
+                "Delete Masyarakat", JOptionPane.YES_NO_OPTION);
+        if (option == JOptionPane.YES_OPTION) {
+            controller.deleteMasyarakat(id);
+            JOptionPane.showMessageDialog(null, "Data berhasil dihapus!");
+            refreshTable(table);
+        }
     }
 
     public static void main(String[] args) {
