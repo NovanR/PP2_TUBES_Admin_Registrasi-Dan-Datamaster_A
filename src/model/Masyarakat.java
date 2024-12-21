@@ -10,7 +10,6 @@ public class Masyarakat {
     private String noHP;
     private String alamat;
     private String image;
-
     private String status;
 
     public Masyarakat(int idMasyarakat, String namaMasyarakat, String jenisKelamin, Date tanggalLahir, String noHP,
