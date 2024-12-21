@@ -36,4 +36,25 @@ public class MasyarakatController {
             return mapper.getMasyarakatById(id);
         }
     }
+
+    public void addMasyarakat(Masyarakat masyarakat) {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
+            MasyarakatMapper mapper = session.getMapper(MasyarakatMapper.class);
+            mapper.insertMasyarakat(masyarakat);
+            session.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateMasyarakat(Masyarakat masyarakat) {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
+            MasyarakatMapper mapper = session.getMapper(MasyarakatMapper.class);
+            mapper.updateMasyarakat(masyarakat);
+            session.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
