@@ -1,15 +1,14 @@
 package controller;
 
-import model.Masyarakat;
-import model.MasyarakatMapper;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.*;
 import java.util.List;
+
+import model.Masyarakat;
+import model.MasyarakatMapper;
 
 public class MasyarakatController {
     private SqlSessionFactory sqlSessionFactory;
@@ -19,7 +18,7 @@ public class MasyarakatController {
             String resource = "mybatis-config.xml";
             InputStream inputStream = Resources.getResourceAsStream(resource);
             sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

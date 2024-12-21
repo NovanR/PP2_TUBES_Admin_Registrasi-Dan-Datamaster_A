@@ -3,18 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/programming/java/TUBESPP2/TheCompilers/src/model/DropboxMapper.java</file>
-            <file>file:/C:/programming/java/TUBESPP2/TheCompilers/src/model/Dropbox.java</file>
-            <file>file:/C:/programming/java/TUBESPP2/TheCompilers/src/controller/DropboxController.java</file>
-            <file>file:/C:/programming/java/TUBESPP2/TheCompilers/src/model/Sampah.java</file>
-            <file>file:/C:/programming/java/TUBESPP2/TheCompilers/src/view/pendaftaran/MasyarakatView.java</file>
             <file>file:/C:/programming/java/TUBESPP2/TheCompilers/src/model/Kurir.java</file>
-            <file>file:/C:/programming/java/TUBESPP2/TheCompilers/src/controller/MasyarakatController.java</file>
-            <file>file:/C:/programming/java/TUBESPP2/TheCompilers/src/model/MyBatisUtil.java</file>
-            <file>file:/C:/programming/java/TUBESPP2/TheCompilers/src/model/Masyarakat.java</file>
-            <file>file:/C:/programming/java/TUBESPP2/TheCompilers/src/view/DropboxView.java</file>
-            <file>file:/C:/programming/java/TUBESPP2/TheCompilers/src/Main.java</file>
-            <file>file:/C:/programming/java/TUBESPP2/TheCompilers/src/mybatis-config.xml</file>
+            <file>file:/C:/programming/java/TUBESPP2/TheCompilers/src/model/KurirMapper.java</file>
         </group>
     </open-files>
 </project-private>
