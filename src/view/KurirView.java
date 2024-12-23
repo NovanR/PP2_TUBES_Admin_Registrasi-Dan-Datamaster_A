@@ -1,4 +1,4 @@
-package view.pendaftaran;
+package view;
 
 import controller.KurirController;
 import model.Kurir;

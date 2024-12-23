@@ -1,6 +1,5 @@
 package view;
 
-import view.pendaftaran.MasyarakatView;
 import javax.swing.*;
 import java.awt.*;
 
