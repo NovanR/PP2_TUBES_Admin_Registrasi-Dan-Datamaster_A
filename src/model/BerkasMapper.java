@@ -24,4 +24,8 @@ public interface BerkasMapper {
     // DELETE: Menghapus data berkas berdasarkan ID
     @Delete("DELETE FROM berkas WHERE idBerkas = #{idBerkas}")
     void deleteBerkas(@Param("idBerkas") int idBerkas);
+
+    // READ: Mengambil semua ID kurir dari tabel kurir
+    @Select("SELECT idKurir FROM kurir")
+    List<Integer> getKurirIds();
 }

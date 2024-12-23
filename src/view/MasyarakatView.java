@@ -1,18 +1,18 @@
-package view.pendaftaran;
+package view;
 
-import controller.KurirController;
-import model.Kurir;
+import controller.MasyarakatController;
+import model.Masyarakat;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-public class KurirView extends JFrame {
-    private KurirController controller;
+public class MasyarakatView extends JFrame {
+    private MasyarakatController controller;
 
-    public KurirView() {
-        controller = new KurirController();
-        setTitle("Data Kurir");
+    public MasyarakatView() {
+        controller = new MasyarakatController();
+        setTitle("Data Masyarakat");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -23,25 +23,25 @@ public class KurirView extends JFrame {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         // Header
-        JLabel headerLabel = new JLabel("Data Kurir", JLabel.CENTER);
+        JLabel headerLabel = new JLabel("Data Masyarakat", JLabel.CENTER);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 18));
         mainPanel.add(headerLabel, BorderLayout.NORTH);
 
         // Table
-        String[] columnNames = { "ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "status" };
-        List<Kurir> kurirList = controller.getAllKurir();
-        Object[][] data = new Object[kurirList.size()][8];
+        String[] columnNames = { "ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "Status" };
+        List<Masyarakat> masyarakatList = controller.getAllMasyarakat();
+        Object[][] data = new Object[masyarakatList.size()][8];
 
-        for (int i = 0; i < kurirList.size(); i++) {
-            Kurir kurir = kurirList.get(i);
-            data[i][0] = kurir.getIdKurir();
-            data[i][1] = kurir.getNamaKurir();
-            data[i][2] = kurir.getJenisKelamin();
-            data[i][3] = kurir.getTanggalLahir();
-            data[i][4] = kurir.getNoHP();
-            data[i][5] = kurir.getAlamat();
-            data[i][6] = kurir.getImage();
-            data[i][7] = kurir.getStatus();
+        for (int i = 0; i < masyarakatList.size(); i++) {
+            Masyarakat masyarakat = masyarakatList.get(i);
+            data[i][0] = masyarakat.getIdMasyarakat();
+            data[i][1] = masyarakat.getNamaMasyarakat();
+            data[i][2] = masyarakat.getJenisKelamin();
+            data[i][3] = masyarakat.getTanggalLahir();
+            data[i][4] = masyarakat.getNoHP();
+            data[i][5] = masyarakat.getAlamat();
+            data[i][6] = masyarakat.getImage();
+            data[i][7] = masyarakat.getStatus();
         }
 
         JTable table = new JTable(data, columnNames);
@@ -50,13 +50,13 @@ public class KurirView extends JFrame {
 
         // Footer
         JButton addButton = new JButton("Add");
-        addButton.addActionListener(e -> addKurir());
+        addButton.addActionListener(e -> addMasyarakat());
 
         JButton updateButton = new JButton("Update");
-        updateButton.addActionListener(e -> updateKurir(table));
+        updateButton.addActionListener(e -> updateMasyarakat(table));
 
         JButton deleteButton = new JButton("Delete");
-        deleteButton.addActionListener(e -> deleteKurir(table));
+        deleteButton.addActionListener(e -> deleteMasyarakat(table));
 
         JButton refreshButton = new JButton("Refresh");
         refreshButton.addActionListener(e -> refreshTable(table));
@@ -71,8 +71,8 @@ public class KurirView extends JFrame {
         add(mainPanel);
     }
 
-    // ADD KURIR
-    private void addKurir() {
+    // ADD MASYARAKAT
+    private void addMasyarakat() {
         // Dialog untuk menambah data baru
         JTextField namaField = new JTextField();
         JRadioButton lakiButton = new JRadioButton("Laki-laki");
@@ -102,7 +102,7 @@ public class KurirView extends JFrame {
                 "Status:", terimaButton, tolakButton
         };
 
-        int option = JOptionPane.showConfirmDialog(null, message, "Add Kurir", JOptionPane.OK_CANCEL_OPTION);
+        int option = JOptionPane.showConfirmDialog(null, message, "Add Masyarakat", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             String jenisKelamin = lakiButton.isSelected() ? "Laki-laki"
                     : perempuanButton.isSelected() ? "Perempuan" : "";
@@ -113,7 +113,7 @@ public class KurirView extends JFrame {
                 return;
             }
 
-            Kurir kurir = new Kurir(
+            Masyarakat masyarakat = new Masyarakat(
                     0, // ID akan digenerate oleh database
                     namaField.getText(),
                     jenisKelamin,
@@ -122,13 +122,13 @@ public class KurirView extends JFrame {
                     alamatField.getText(),
                     imageField.getText(),
                     status);
-            controller.addKurir(kurir);
+            controller.addMasyarakat(masyarakat);
             JOptionPane.showMessageDialog(null, "Data berhasil ditambahkan!");
         }
     }
 
     // UPDATE
-    private void updateKurir(JTable table) {
+    private void updateMasyarakat(JTable table) {
         int selectedRow = table.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(null, "Pilih baris yang akan diupdate.");
@@ -155,16 +155,16 @@ public class KurirView extends JFrame {
         JTextField alamatField = new JTextField((String) table.getValueAt(selectedRow, 5));
         JTextField imageField = new JTextField((String) table.getValueAt(selectedRow, 6));
 
-        JRadioButton terimaButton = new JRadioButton("DISETUJUI");
-        JRadioButton tolakButton = new JRadioButton("DITOLAK");
+        JRadioButton terimaButton = new JRadioButton("Terima");
+        JRadioButton tolakButton = new JRadioButton("Tolak");
         ButtonGroup statusGroup = new ButtonGroup();
         statusGroup.add(terimaButton);
         statusGroup.add(tolakButton);
 
         String currentStatus = table.getValueAt(selectedRow, 7).toString();
-        if ("DISETUJUI".equalsIgnoreCase(currentStatus)) {
+        if ("Terima".equalsIgnoreCase(currentStatus)) {
             terimaButton.setSelected(true);
-        } else if ("DITOLAK".equalsIgnoreCase(currentStatus)) {
+        } else if ("Tolak".equalsIgnoreCase(currentStatus)) {
             tolakButton.setSelected(true);
         }
 
@@ -178,7 +178,7 @@ public class KurirView extends JFrame {
                 "Status:", terimaButton, tolakButton
         };
 
-        int option = JOptionPane.showConfirmDialog(null, message, "Update Kurir", JOptionPane.OK_CANCEL_OPTION);
+        int option = JOptionPane.showConfirmDialog(null, message, "Update Masyarakat", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             String newJenisKelamin = lakiButton.isSelected() ? "Laki-laki"
                     : perempuanButton.isSelected() ? "Perempuan" : "";
@@ -189,7 +189,7 @@ public class KurirView extends JFrame {
                 return;
             }
 
-            Kurir kurir = new Kurir(
+            Masyarakat masyarakat = new Masyarakat(
                     id,
                     namaField.getText(),
                     newJenisKelamin,
@@ -198,26 +198,26 @@ public class KurirView extends JFrame {
                     alamatField.getText(),
                     imageField.getText(),
                     newStatus);
-            controller.updateKurir(kurir);
+            controller.updateMasyarakat(masyarakat);
             JOptionPane.showMessageDialog(null, "Data berhasil diperbarui!");
         }
     }
 
     // REFRESH
     private void refreshTable(JTable table) {
-        List<Kurir> kurirList = controller.getAllKurir();
-        Object[][] data = new Object[kurirList.size()][8];
+        List<Masyarakat> masyarakatList = controller.getAllMasyarakat();
+        Object[][] data = new Object[masyarakatList.size()][8];
 
-        for (int i = 0; i < kurirList.size(); i++) {
-            Kurir kurir = kurirList.get(i);
-            data[i][0] = kurir.getIdKurir();
-            data[i][1] = kurir.getNamaKurir();
-            data[i][2] = kurir.getJenisKelamin();
-            data[i][3] = kurir.getTanggalLahir();
-            data[i][4] = kurir.getNoHP();
-            data[i][5] = kurir.getAlamat();
-            data[i][6] = kurir.getImage();
-            data[i][7] = kurir.getStatus();
+        for (int i = 0; i < masyarakatList.size(); i++) {
+            Masyarakat masyarakat = masyarakatList.get(i);
+            data[i][0] = masyarakat.getIdMasyarakat();
+            data[i][1] = masyarakat.getNamaMasyarakat();
+            data[i][2] = masyarakat.getJenisKelamin();
+            data[i][3] = masyarakat.getTanggalLahir();
+            data[i][4] = masyarakat.getNoHP();
+            data[i][5] = masyarakat.getAlamat();
+            data[i][6] = masyarakat.getImage();
+            data[i][7] = masyarakat.getStatus();
         }
 
         table.setModel(new javax.swing.table.DefaultTableModel(data, new String[] {
@@ -226,7 +226,7 @@ public class KurirView extends JFrame {
     }
 
     // DELETE
-    private void deleteKurir(JTable table) {
+    private void deleteMasyarakat(JTable table) {
         int selectedRow = table.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(null, "Pilih baris yang akan dihapus.");
@@ -235,9 +235,9 @@ public class KurirView extends JFrame {
 
         int id = (int) table.getValueAt(selectedRow, 0);
         int option = JOptionPane.showConfirmDialog(null, "Apakah Anda yakin ingin menghapus data ini?",
-                "Delete Kurir", JOptionPane.YES_NO_OPTION);
+                "Delete Masyarakat", JOptionPane.YES_NO_OPTION);
         if (option == JOptionPane.YES_OPTION) {
-            controller.deleteKurir(id);
+            controller.deleteMasyarakat(id);
             JOptionPane.showMessageDialog(null, "Data berhasil dihapus!");
             refreshTable(table);
         }
@@ -245,7 +245,7 @@ public class KurirView extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            KurirView view = new KurirView();
+            MasyarakatView view = new MasyarakatView();
             view.setVisible(true);
         });
     }
