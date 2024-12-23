@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.*;
 public interface KurirMapper {
 
     // CREATE: Menambahkan data baru ke tabel kurir
-    @Insert("INSERT INTO kurir (idKurir, namaKurir, jenisKelamin, tanggalLahir, noHP, alamat, image, status) VALUES (#{idKurir}, #{namaKurir}, #{jenisKelamin}, #{tanggalLahir}, #{noHP}, #{alamat}, #{image}), #{status})")
+    @Insert("INSERT INTO kurir (idKurir, namaKurir, jenisKelamin, tanggalLahir, noHP, alamat, image, status) VALUES (#{idKurir}, #{namaKurir}, #{jenisKelamin}, #{tanggalLahir}, #{noHP}, #{alamat}, #{image}, #{status})")
     void insertKurir(Kurir kurir);
 
     // READ: Mengambil semua data dari tabel kurir

@@ -28,9 +28,9 @@ public class KurirView extends JFrame {
         mainPanel.add(headerLabel, BorderLayout.NORTH);
 
         // Table
-        String[] columnNames = { "ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image" };
+        String[] columnNames = { "ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "status" };
         List<Kurir> kurirList = controller.getAllKurir();
-        Object[][] data = new Object[kurirList.size()][7];
+        Object[][] data = new Object[kurirList.size()][8];
 
         for (int i = 0; i < kurirList.size(); i++) {
             Kurir kurir = kurirList.get(i);
@@ -41,6 +41,7 @@ public class KurirView extends JFrame {
             data[i][4] = kurir.getNoHP();
             data[i][5] = kurir.getAlamat();
             data[i][6] = kurir.getImage();
+            data[i][7] = kurir.getStatus();
         }
 
         JTable table = new JTable(data, columnNames);
@@ -48,18 +49,164 @@ public class KurirView extends JFrame {
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         // Footer
+        JButton addButton = new JButton("Add");
+        addButton.addActionListener(e -> addKurir());
+
+        JButton updateButton = new JButton("Update");
+        updateButton.addActionListener(e -> updateKurir(table));
+
+        JButton deleteButton = new JButton("Delete");
+        deleteButton.addActionListener(e -> deleteKurir(table));
+
         JButton refreshButton = new JButton("Refresh");
         refreshButton.addActionListener(e -> refreshTable(table));
+
         JPanel footerPanel = new JPanel();
+        footerPanel.add(addButton);
+        footerPanel.add(updateButton);
+        footerPanel.add(deleteButton);
         footerPanel.add(refreshButton);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
     }
 
+    // ADD KURIR
+    private void addKurir() {
+        // Dialog untuk menambah data baru
+        JTextField namaField = new JTextField();
+        JRadioButton lakiButton = new JRadioButton("Laki-laki");
+        JRadioButton perempuanButton = new JRadioButton("Perempuan");
+        ButtonGroup genderGroup = new ButtonGroup();
+        genderGroup.add(lakiButton);
+        genderGroup.add(perempuanButton);
+
+        JTextField tanggalLahirField = new JTextField();
+        JTextField noHPField = new JTextField();
+        JTextField alamatField = new JTextField();
+        JTextField imageField = new JTextField();
+
+        JRadioButton terimaButton = new JRadioButton("Terima");
+        JRadioButton tolakButton = new JRadioButton("Tolak");
+        ButtonGroup statusGroup = new ButtonGroup();
+        statusGroup.add(terimaButton);
+        statusGroup.add(tolakButton);
+
+        Object[] message = {
+                "Nama:", namaField,
+                "Jenis Kelamin:", lakiButton, perempuanButton,
+                "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
+                "No HP:", noHPField,
+                "Alamat:", alamatField,
+                "Image Path:", imageField,
+                "Status:", terimaButton, tolakButton
+        };
+
+        int option = JOptionPane.showConfirmDialog(null, message, "Add Kurir", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+            String jenisKelamin = lakiButton.isSelected() ? "Laki-laki"
+                    : perempuanButton.isSelected() ? "Perempuan" : "";
+            String status = terimaButton.isSelected() ? "DISETUJUI" : tolakButton.isSelected() ? "DITOLAK" : "";
+
+            if (jenisKelamin.isEmpty() || status.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Silakan lengkapi semua pilihan!");
+                return;
+            }
+
+            Kurir kurir = new Kurir(
+                    0, // ID akan digenerate oleh database
+                    namaField.getText(),
+                    jenisKelamin,
+                    java.sql.Date.valueOf(tanggalLahirField.getText()),
+                    noHPField.getText(),
+                    alamatField.getText(),
+                    imageField.getText(),
+                    status);
+            controller.addKurir(kurir);
+            JOptionPane.showMessageDialog(null, "Data berhasil ditambahkan!");
+        }
+    }
+
+    // UPDATE
+    private void updateKurir(JTable table) {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(null, "Pilih baris yang akan diupdate.");
+            return;
+        }
+
+        int id = (int) table.getValueAt(selectedRow, 0);
+        JTextField namaField = new JTextField((String) table.getValueAt(selectedRow, 1));
+        JRadioButton lakiButton = new JRadioButton("Laki-laki");
+        JRadioButton perempuanButton = new JRadioButton("Perempuan");
+        ButtonGroup genderGroup = new ButtonGroup();
+        genderGroup.add(lakiButton);
+        genderGroup.add(perempuanButton);
+
+        String jenisKelamin = (String) table.getValueAt(selectedRow, 2);
+        if ("Laki-laki".equals(jenisKelamin)) {
+            lakiButton.setSelected(true);
+        } else if ("Perempuan".equals(jenisKelamin)) {
+            perempuanButton.setSelected(true);
+        }
+
+        JTextField tanggalLahirField = new JTextField(table.getValueAt(selectedRow, 3).toString());
+        JTextField noHPField = new JTextField((String) table.getValueAt(selectedRow, 4));
+        JTextField alamatField = new JTextField((String) table.getValueAt(selectedRow, 5));
+        JTextField imageField = new JTextField((String) table.getValueAt(selectedRow, 6));
+
+        JRadioButton terimaButton = new JRadioButton("DISETUJUI");
+        JRadioButton tolakButton = new JRadioButton("DITOLAK");
+        ButtonGroup statusGroup = new ButtonGroup();
+        statusGroup.add(terimaButton);
+        statusGroup.add(tolakButton);
+
+        String currentStatus = table.getValueAt(selectedRow, 7).toString();
+        if ("DISETUJUI".equalsIgnoreCase(currentStatus)) {
+            terimaButton.setSelected(true);
+        } else if ("DITOLAK".equalsIgnoreCase(currentStatus)) {
+            tolakButton.setSelected(true);
+        }
+
+        Object[] message = {
+                "Nama:", namaField,
+                "Jenis Kelamin:", lakiButton, perempuanButton,
+                "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
+                "No HP:", noHPField,
+                "Alamat:", alamatField,
+                "Image Path:", imageField,
+                "Status:", terimaButton, tolakButton
+        };
+
+        int option = JOptionPane.showConfirmDialog(null, message, "Update Kurir", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+            String newJenisKelamin = lakiButton.isSelected() ? "Laki-laki"
+                    : perempuanButton.isSelected() ? "Perempuan" : "";
+            String newStatus = terimaButton.isSelected() ? "Terima" : tolakButton.isSelected() ? "Tolak" : "";
+
+            if (newJenisKelamin.isEmpty() || newStatus.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Silakan lengkapi semua pilihan!");
+                return;
+            }
+
+            Kurir kurir = new Kurir(
+                    id,
+                    namaField.getText(),
+                    newJenisKelamin,
+                    java.sql.Date.valueOf(tanggalLahirField.getText()),
+                    noHPField.getText(),
+                    alamatField.getText(),
+                    imageField.getText(),
+                    newStatus);
+            controller.updateKurir(kurir);
+            JOptionPane.showMessageDialog(null, "Data berhasil diperbarui!");
+        }
+    }
+
+    // REFRESH
     private void refreshTable(JTable table) {
         List<Kurir> kurirList = controller.getAllKurir();
-        Object[][] data = new Object[kurirList.size()][7];
+        Object[][] data = new Object[kurirList.size()][8];
 
         for (int i = 0; i < kurirList.size(); i++) {
             Kurir kurir = kurirList.get(i);
@@ -70,11 +217,30 @@ public class KurirView extends JFrame {
             data[i][4] = kurir.getNoHP();
             data[i][5] = kurir.getAlamat();
             data[i][6] = kurir.getImage();
+            data[i][7] = kurir.getStatus();
         }
 
         table.setModel(new javax.swing.table.DefaultTableModel(data, new String[] {
-                "ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image"
+                "ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "Status"
         }));
+    }
+
+    // DELETE
+    private void deleteKurir(JTable table) {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(null, "Pilih baris yang akan dihapus.");
+            return;
+        }
+
+        int id = (int) table.getValueAt(selectedRow, 0);
+        int option = JOptionPane.showConfirmDialog(null, "Apakah Anda yakin ingin menghapus data ini?",
+                "Delete Kurir", JOptionPane.YES_NO_OPTION);
+        if (option == JOptionPane.YES_OPTION) {
+            controller.deleteKurir(id);
+            JOptionPane.showMessageDialog(null, "Data berhasil dihapus!");
+            refreshTable(table);
+        }
     }
 
     public static void main(String[] args) {
