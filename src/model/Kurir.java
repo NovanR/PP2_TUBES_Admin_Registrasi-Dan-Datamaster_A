@@ -10,12 +10,9 @@ public class Kurir {
     private String noHP;
     private String alamat;
     private String image;
-    public enum Status {
-        DISETUJUI, DITOLAK, PENDING
-    }
-    private Status status;
+    private String status;
 
-    public Kurir(int idKurir, String namaKurir, String jenisKelamin, Date tanggalLahir, String noHP, String alamat, String image, Status status) {
+    public Kurir(int idKurir, String namaKurir, String jenisKelamin, Date tanggalLahir, String noHP, String alamat, String image, String status) {
         this.idKurir = idKurir;
         this.namaKurir = namaKurir;
         this.jenisKelamin = jenisKelamin;
@@ -82,11 +79,11 @@ public class Kurir {
         this.image = image;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
     

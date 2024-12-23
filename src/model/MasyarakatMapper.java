@@ -24,4 +24,6 @@ public interface MasyarakatMapper {
     // DELETE: Menghapus data masyarakat berdasarkan ID
     @Delete("DELETE FROM masyarakat WHERE idMasyarakat = #{idMasyarakat}")
     void deleteMasyarakat(@Param("idMasyarakat") int idMasyarakat);
+
+    void updateKurir(Kurir kurir);
 }
