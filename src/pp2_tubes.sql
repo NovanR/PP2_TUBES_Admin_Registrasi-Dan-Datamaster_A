@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 18, 2024 at 04:13 AM
+-- Generation Time: Dec 27, 2024 at 09:58 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.3.12
 
@@ -24,14 +24,36 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `berkas`
+--
+
+CREATE TABLE `berkas` (
+  `idBerkas` int NOT NULL,
+  `idKtp` varchar(20) NOT NULL,
+  `idSim` varchar(20) NOT NULL,
+  `status` varchar(50) NOT NULL,
+  `idKurir` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `berkas`
+--
+
+INSERT INTO `berkas` (`idBerkas`, `idKtp`, `idSim`, `status`, `idKurir`) VALUES
+(1, '2', '3', 'Aktif', 5),
+(2, '3', '3', 'Aktif', 4);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `dropbox`
 --
 
 CREATE TABLE `dropbox` (
   `idTps` int NOT NULL,
-  `namaTps` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `noHpTps` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `alamat` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
+  `namaTps` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `noHpTps` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `alamat` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -47,8 +69,23 @@ INSERT INTO `dropbox` (`idTps`, `namaTps`, `noHpTps`, `alamat`) VALUES
 (6, 'TPS 6', '081200000006', 'Jl. Jambu No. 6'),
 (7, 'TPS 7', '081200000007', 'Jl. Rambutan No. 7'),
 (8, 'TPS 8', '081200000008', 'Jl. Durian No. 8'),
-(9, 'TPS 9', '081200000009', 'Jl. Pepaya No. 9'),
+(9, 'Bantar Gebang', '081200000009', 'Jl. Pepaya No. 9'),
 (10, 'TPS 10', '081200000010', 'Jl. Apel No. 10');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `konversi_poin`
+--
+
+CREATE TABLE `konversi_poin` (
+  `idPoin` int NOT NULL,
+  `poin` int NOT NULL,
+  `berat` decimal(10,2) NOT NULL,
+  `idMasyarakat` int NOT NULL,
+  `idSampah` int NOT NULL,
+  `idTps` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
@@ -58,13 +95,13 @@ INSERT INTO `dropbox` (`idTps`, `namaTps`, `noHpTps`, `alamat`) VALUES
 
 CREATE TABLE `kurir` (
   `idKurir` int NOT NULL,
-  `namaKurir` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `jenisKelamin` enum('Laki-laki','Perempuan') COLLATE utf8mb4_general_ci NOT NULL,
+  `namaKurir` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `jenisKelamin` enum('Laki-laki','Perempuan') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `tanggalLahir` date NOT NULL,
-  `noHP` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `alamat` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `image` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `status` enum('DISETUJUI','DITOLAK','PENDING') COLLATE utf8mb4_general_ci DEFAULT 'PENDING'
+  `noHP` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `alamat` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `status` enum('DISETUJUI','DITOLAK','PENDING') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'PENDING'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -91,13 +128,13 @@ INSERT INTO `kurir` (`idKurir`, `namaKurir`, `jenisKelamin`, `tanggalLahir`, `no
 
 CREATE TABLE `masyarakat` (
   `idMasyarakat` int NOT NULL,
-  `namaMasyarakat` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `jenisKelamin` enum('Laki-laki','Perempuan') COLLATE utf8mb4_general_ci NOT NULL,
+  `namaMasyarakat` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `jenisKelamin` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `tanggalLahir` date NOT NULL,
-  `noHP` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `alamat` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `image` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `status` enum('DISETUJUI','DITOLAK','PENDING') COLLATE utf8mb4_general_ci DEFAULT 'PENDING'
+  `noHP` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `alamat` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `status` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'PENDING'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -113,8 +150,7 @@ INSERT INTO `masyarakat` (`idMasyarakat`, `namaMasyarakat`, `jenisKelamin`, `tan
 (6, 'Fajar', 'Laki-laki', '1992-09-15', '081789012345', 'Jl. Jambu No. 6', 'img6.jpg', 'PENDING'),
 (7, 'Gita', 'Perempuan', '1997-12-20', '081890123456', 'Jl. Rambutan No. 7', 'img7.jpg', 'DISETUJUI'),
 (8, 'Hendra', 'Laki-laki', '1988-11-30', '081901234567', 'Jl. Durian No. 8', 'img8.jpg', 'DITOLAK'),
-(9, 'Indah', 'Perempuan', '1991-02-14', '082012345678', 'Jl. Pepaya No. 9', 'img9.jpg', 'DISETUJUI'),
-(10, 'Joko', 'Laki-laki', '1994-06-18', '082123456789', 'Jl. Apel No. 10', 'img10.jpg', 'PENDING');
+(9, 'Indah', 'Perempuan', '1991-02-14', '082012345678', 'Jl. Pepaya No. 9', 'img9.jpg', 'Terima');
 
 -- --------------------------------------------------------
 
@@ -124,39 +160,44 @@ INSERT INTO `masyarakat` (`idMasyarakat`, `namaMasyarakat`, `jenisKelamin`, `tan
 
 CREATE TABLE `sampah` (
   `idSampah` int NOT NULL,
-  `kategoriSampah` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `berat` int NOT NULL,
-  `poin` int NOT NULL,
-  `idMasyarakat` int NOT NULL,
-  `idTps` int NOT NULL,
-  `idKurir` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `kategoriSampah` varchar(100) NOT NULL,
+  `jenisSampah` varchar(100) NOT NULL,
+  `idTps` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `sampah`
 --
 
-INSERT INTO `sampah` (`idSampah`, `kategoriSampah`, `berat`, `poin`, `idMasyarakat`, `idTps`, `idKurir`) VALUES
-(1, 'Plastik', 5, 10, 1, 1, 1),
-(2, 'Kaca', 3, 7, 2, 2, 2),
-(3, 'Kertas', 4, 8, 3, 3, 3),
-(4, 'Logam', 6, 12, 4, 4, 4),
-(5, 'Plastik', 7, 14, 5, 5, 5),
-(6, 'Kaca', 2, 5, 6, 6, 6),
-(7, 'Kertas', 8, 16, 7, 7, 7),
-(8, 'Logam', 3, 6, 8, 8, 8),
-(9, 'Plastik', 10, 20, 9, 9, 9),
-(10, 'Kaca', 5, 10, 10, 10, 10);
+INSERT INTO `sampah` (`idSampah`, `kategoriSampah`, `jenisSampah`, `idTps`) VALUES
+(1, 'Elektronik', 'Monitor', 2),
+(5, 'elektronik', 'keyboard', 9);
 
 --
 -- Indexes for dumped tables
 --
 
 --
+-- Indexes for table `berkas`
+--
+ALTER TABLE `berkas`
+  ADD PRIMARY KEY (`idBerkas`),
+  ADD KEY `idKurir` (`idKurir`);
+
+--
 -- Indexes for table `dropbox`
 --
 ALTER TABLE `dropbox`
   ADD PRIMARY KEY (`idTps`);
+
+--
+-- Indexes for table `konversi_poin`
+--
+ALTER TABLE `konversi_poin`
+  ADD PRIMARY KEY (`idPoin`),
+  ADD KEY `idMasyarakat` (`idMasyarakat`),
+  ADD KEY `idSampah` (`idSampah`),
+  ADD KEY `idTps` (`idTps`);
 
 --
 -- Indexes for table `kurir`
@@ -175,13 +216,17 @@ ALTER TABLE `masyarakat`
 --
 ALTER TABLE `sampah`
   ADD PRIMARY KEY (`idSampah`),
-  ADD KEY `idMasyarakat` (`idMasyarakat`),
-  ADD KEY `idTps` (`idTps`),
-  ADD KEY `idKurir` (`idKurir`);
+  ADD KEY `idTps` (`idTps`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `berkas`
+--
+ALTER TABLE `berkas`
+  MODIFY `idBerkas` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `dropbox`
@@ -190,34 +235,52 @@ ALTER TABLE `dropbox`
   MODIFY `idTps` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
+-- AUTO_INCREMENT for table `konversi_poin`
+--
+ALTER TABLE `konversi_poin`
+  MODIFY `idPoin` int NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `kurir`
 --
 ALTER TABLE `kurir`
-  MODIFY `idKurir` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `idKurir` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `masyarakat`
 --
 ALTER TABLE `masyarakat`
-  MODIFY `idMasyarakat` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `idMasyarakat` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `sampah`
 --
 ALTER TABLE `sampah`
-  MODIFY `idSampah` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `idSampah` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
 --
 
 --
+-- Constraints for table `berkas`
+--
+ALTER TABLE `berkas`
+  ADD CONSTRAINT `berkas_ibfk_1` FOREIGN KEY (`idKurir`) REFERENCES `kurir` (`idKurir`);
+
+--
+-- Constraints for table `konversi_poin`
+--
+ALTER TABLE `konversi_poin`
+  ADD CONSTRAINT `konversi_poin_ibfk_1` FOREIGN KEY (`idMasyarakat`) REFERENCES `masyarakat` (`idMasyarakat`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  ADD CONSTRAINT `konversi_poin_ibfk_2` FOREIGN KEY (`idSampah`) REFERENCES `sampah` (`idSampah`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  ADD CONSTRAINT `konversi_poin_ibfk_3` FOREIGN KEY (`idTps`) REFERENCES `dropbox` (`idTps`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+--
 -- Constraints for table `sampah`
 --
 ALTER TABLE `sampah`
-  ADD CONSTRAINT `sampah_ibfk_1` FOREIGN KEY (`idMasyarakat`) REFERENCES `masyarakat` (`idMasyarakat`) ON DELETE CASCADE ON UPDATE RESTRICT,
-  ADD CONSTRAINT `sampah_ibfk_2` FOREIGN KEY (`idTps`) REFERENCES `dropbox` (`idTps`) ON DELETE CASCADE ON UPDATE RESTRICT,
-  ADD CONSTRAINT `sampah_ibfk_3` FOREIGN KEY (`idKurir`) REFERENCES `kurir` (`idKurir`) ON DELETE CASCADE ON UPDATE RESTRICT;
+  ADD CONSTRAINT `sampah_ibfk_1` FOREIGN KEY (`idTps`) REFERENCES `dropbox` (`idTps`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
