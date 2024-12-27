@@ -9,6 +9,7 @@ import java.util.List;
 import model.Dropbox;
 import model.DropboxMapper;
 
+
 public class DropboxController {
     private SqlSessionFactory sqlSessionFactory;
 
@@ -33,6 +34,36 @@ public class DropboxController {
         try (SqlSession session = sqlSessionFactory.openSession()) {
             DropboxMapper mapper = session.getMapper(DropboxMapper.class);
             return mapper.getDropboxById(id);
+        }
+    }
+
+     public void addDropbox(Dropbox dropbox) {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
+            DropboxMapper mapper = session.getMapper(DropboxMapper.class);
+            mapper.insertDropbox(dropbox);
+            session.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateDropbox(Dropbox dropbox) {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
+            DropboxMapper mapper = session.getMapper(DropboxMapper.class);
+            mapper.updateDropbox(dropbox);
+            session.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteDropbox(int id) {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
+            DropboxMapper mapper = session.getMapper(DropboxMapper.class);
+            mapper.deleteDropbox(id);
+            session.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
