@@ -1,26 +1,21 @@
+// Model
 package model;
 
 public class Sampah {
     private int idSampah;
     private String kategoriSampah;
-    private int berat;
-    private int poin;
-    private int idMasyarakat;
+    private String jenisSampah;
     private int idTps;
-    private int idKurir;
 
-
-    public Sampah(int idSampah, String kategoriSampah, int berat, int poin, int idMasyarakat, int idTps, int idKurir) {
-
+    // Constructor
+    public Sampah(int idSampah, String kategoriSampah, String jenisSampah, int idTps) {
         this.idSampah = idSampah;
         this.kategoriSampah = kategoriSampah;
-        this.berat = berat;
-        this.poin = poin;
-        this.idMasyarakat = idMasyarakat;
+        this.jenisSampah = jenisSampah;
         this.idTps = idTps;
-        this.idKurir = idKurir;
     }
 
+    // Getters and Setters
     public int getIdSampah() {
         return idSampah;
     }
@@ -37,28 +32,12 @@ public class Sampah {
         this.kategoriSampah = kategoriSampah;
     }
 
-    public int getBerat() {
-        return berat;
+    public String getJenisSampah() {
+        return jenisSampah;
     }
 
-    public void setBerat(int berat) {
-        this.berat = berat;
-    }
-
-    public int getPoin() {
-        return poin;
-    }
-
-    public void setPoin(int poin) {
-        this.poin = poin;
-    }
-
-    public int getIdMasyarakat() {
-        return idMasyarakat;
-    }
-
-    public void setIdMasyarakat(int idMasyarakat) {
-        this.idMasyarakat = idMasyarakat;
+    public void setJenisSampah(String jenisSampah) {
+        this.jenisSampah = jenisSampah;
     }
 
     public int getIdTps() {
@@ -68,12 +47,4 @@ public class Sampah {
     public void setIdTps(int idTps) {
         this.idTps = idTps;
     }
-
-    public int getIdKurir() {
-        return idKurir;
-    }
-
-    public void setIdKurir(int idKurir) {
-        this.idKurir = idKurir;
-        }
-    }
+}

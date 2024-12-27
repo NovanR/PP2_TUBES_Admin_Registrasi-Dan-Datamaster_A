@@ -69,7 +69,10 @@ public class MainFrame extends JFrame {
     }
 
     private void showPengelolaanSampah() {
-        JOptionPane.showMessageDialog(this, "Pengelolaan Sampah clicked");
+        SwingUtilities.invokeLater(() -> {
+            SampahView sampahView = new SampahView();
+            sampahView.setVisible(true);
+        });
     }
 
     private void showKonversiPoin() {
