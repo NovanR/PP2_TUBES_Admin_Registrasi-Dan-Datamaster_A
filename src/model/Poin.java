@@ -8,7 +8,8 @@ public class Poin {
     private int idSampah;
     private int idTps;
 
-    // Constructor
+    public Poin() {}
+
     public Poin(int idPoin, int poin, double berat, int idMasyarakat, int idSampah, int idTps) {
         this.idPoin = idPoin;
         this.poin = poin;
@@ -17,8 +18,7 @@ public class Poin {
         this.idSampah = idSampah;
         this.idTps = idTps;
     }
-    
-    // Getters and Setters
+
     public int getIdPoin() {
         return idPoin;
     }
