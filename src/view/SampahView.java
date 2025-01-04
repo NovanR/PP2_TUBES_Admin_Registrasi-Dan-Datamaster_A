@@ -1,16 +1,21 @@
 package view;
 
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import controller.SampahController;
 import model.Sampah;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.io.FileOutputStream;
 import java.util.List;
 
 public class SampahView extends JFrame {
 
     private JTable sampahTable;
+    private JButton addButton, updateButton, deleteButton, loadButton, exportPdfButton;
     private JButton addButton, updateButton, deleteButton, loadButton, kembaliButton;
     private SampahController controller;
 
@@ -33,6 +38,7 @@ public class SampahView extends JFrame {
         updateButton = new JButton("Update");
         deleteButton = new JButton("Hapus");
         loadButton = new JButton("Refresh");
+        exportPdfButton = new JButton("Export PDF");
         kembaliButton = new JButton("Kembali");
         kembaliButton.addActionListener(e -> kembaliKeMainFrame());
 
@@ -40,6 +46,7 @@ public class SampahView extends JFrame {
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(loadButton);
+        buttonPanel.add(exportPdfButton);
         buttonPanel.add(kembaliButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
@@ -57,11 +64,57 @@ public class SampahView extends JFrame {
         });
         deleteButton.addActionListener(e -> deleteSampah());
         loadButton.addActionListener(e -> loadData());
+        exportPdfButton.addActionListener(e -> exportToPdf()); // Tambahkan listener untuk ekspor PDF
 
         // Load data saat aplikasi dimulai
         loadData();
 
         setVisible(true);
+    }
+
+    private void exportToPdf() {
+        List<Sampah> sampahList = controller.getAllSampah();
+        if (sampahList.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Tidak ada data untuk diekspor!");
+            return;
+        }
+
+        try {
+            Document document = new Document(PageSize.A4);
+            String outputPath = System.getProperty("user.dir") + "/data_sampah.pdf";
+            PdfWriter.getInstance(document, new FileOutputStream(outputPath));
+
+            document.open();
+            document.add(new Paragraph("Laporan Data Sampah", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
+            document.add(new Paragraph(" "));
+            
+            PdfPTable table = new PdfPTable(4); // Empat kolom
+            table.setWidthPercentage(100);
+            table.setSpacingBefore(10f);
+            table.setSpacingAfter(10f);
+            table.setWidths(new float[] {1f, 2f, 2f, 1f});
+
+            // Header tabel
+            table.addCell("ID Sampah");
+            table.addCell("Kategori Sampah");
+            table.addCell("Jenis Sampah");
+            table.addCell("ID TPS");
+
+            // Isi tabel
+            for (Sampah sampah : sampahList) {
+                table.addCell(String.valueOf(sampah.getIdSampah()));
+                table.addCell(sampah.getKategoriSampah());
+                table.addCell(sampah.getJenisSampah());
+                table.addCell(String.valueOf(sampah.getIdTps()));
+            }
+
+            document.add(table);
+            document.close();
+
+            JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " + outputPath);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " + e.getMessage());
+        }
     }
 
     private void showInputDialog(String action, Sampah sampah) {
