@@ -76,10 +76,42 @@ public class MainFrame extends JFrame {
             });
         });
 
-        kurirButton.addActionListener(e -> JOptionPane.showMessageDialog(pendaftaranFrame, "Kurir clicked"));
+        kurirButton.addActionListener(e -> {
+            showKurir(pendaftaranFrame, panel);
+        });
 
         pendaftaranFrame.add(panel);
         pendaftaranFrame.setVisible(true);
+    }
+
+    private void showKurir(JFrame pendaftaranFrame, JPanel panel) {
+        panel.removeAll();
+
+        JButton persetujuanButton = new JButton("Persetujuan");
+        JButton verifikasiButton = new JButton("Verifikasi");
+
+        panel.add(persetujuanButton);
+        panel.add(verifikasiButton);
+
+        // Atur ulang layout panel
+        panel.revalidate();
+        panel.repaint();
+
+        persetujuanButton.addActionListener(evt -> {
+            pendaftaranFrame.dispose();
+            SwingUtilities.invokeLater(() -> {
+                KurirView kurirView = new KurirView();
+                kurirView.setVisible(true);
+            });
+        });
+
+        verifikasiButton.addActionListener(evt -> {
+            pendaftaranFrame.dispose();
+            SwingUtilities.invokeLater(() -> {
+                BerkasView berkasView = new BerkasView();
+                berkasView.setVisible(true);
+            });
+        });
     }
 
     private void showPengelolaanSampah() {
@@ -90,7 +122,10 @@ public class MainFrame extends JFrame {
     }
 
     private void showKonversiPoin() {
-        JOptionPane.showMessageDialog(this, "Konversi Poin clicked");
+        SwingUtilities.invokeLater(() -> {
+            KonversiPoin konversiPoin = new KonversiPoin();
+            konversiPoin.setVisible(true);
+        });
     }
 
     private void showDropbox() {

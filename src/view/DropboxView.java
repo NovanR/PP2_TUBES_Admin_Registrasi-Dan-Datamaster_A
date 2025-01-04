@@ -2,7 +2,6 @@ package view;
 
 import controller.DropboxController;
 import model.Dropbox;
-import model.DropboxMapper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,11 +56,15 @@ public class DropboxView extends JFrame {
         JButton refreshButton = new JButton("Refresh");
         refreshButton.addActionListener(e -> refreshTable(table));
 
+        JButton kembaliButton = new JButton("Kembali");
+        kembaliButton.addActionListener(e -> kembaliKeMainFrame());
+
         JPanel footerPanel = new JPanel();
         footerPanel.add(addButton);
         footerPanel.add(updateButton);
         footerPanel.add(deleteButton);
         footerPanel.add(refreshButton);
+        footerPanel.add(kembaliButton);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
@@ -175,6 +178,15 @@ public class DropboxView extends JFrame {
                 JOptionPane.showMessageDialog(null, "Gagal menghapus data: " + e.getMessage());
             }
         }
+    }
+
+    // Kembali ke main frame
+    private void kembaliKeMainFrame() {
+        this.dispose();
+        SwingUtilities.invokeLater(() -> {
+            MainFrame mainFrame = new MainFrame();
+            mainFrame.setVisible(true);
+        });
     }
 
     public static void main(String[] args) {
