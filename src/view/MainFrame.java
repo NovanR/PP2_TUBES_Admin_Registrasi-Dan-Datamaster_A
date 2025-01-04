@@ -14,29 +14,43 @@ public class MainFrame extends JFrame {
     }
 
     private void initUI() {
+        // Panel utama dengan layout GridLayout (2 baris dan 2 kolom)
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(4, 1, 10, 10));
+        mainPanel.setLayout(new GridLayout(2, 2, 10, 10)); // 2 baris, 2 kolom, spasi 10px antar tombol
 
-        // Buttons
-        JButton pendaftaranButton = new JButton("Pendaftaran");
-        JButton pengelolaanSampahButton = new JButton("Pengelolaan Sampah");
-        JButton konversiPoinButton = new JButton("Konversi Poin");
-        JButton dropboxButton = new JButton("Dropbox");
+        // Membuat tombol dengan fungsi dan gaya menarik
+        JButton pendaftaranButton = createButton("Pendaftaran");
+        JButton pengelolaanSampahButton = createButton("Pengelolaan Sampah");
+        JButton konversiPoinButton = createButton("Konversi Poin");
+        JButton dropboxButton = createButton("Dropbox");
 
-        // Add buttons to panel
+        // Menambahkan tombol ke panel utama
         mainPanel.add(pendaftaranButton);
         mainPanel.add(pengelolaanSampahButton);
         mainPanel.add(konversiPoinButton);
         mainPanel.add(dropboxButton);
 
-        // Add actions for buttons
+        // Menambahkan aksi untuk tombol
         pendaftaranButton.addActionListener(e -> showPendaftaran());
         pengelolaanSampahButton.addActionListener(e -> showPengelolaanSampah());
         konversiPoinButton.addActionListener(e -> showKonversiPoin());
         dropboxButton.addActionListener(e -> showDropbox());
 
-        // Add panel to frame
-        add(mainPanel);
+        // Menambahkan panel utama ke frame
+        add(mainPanel, BorderLayout.CENTER);
+    }
+
+    private JButton createButton(String text) {
+        // Membuat tombol dengan teks dan gaya
+        JButton button = new JButton(text);
+        button.setFont(new Font("Arial", Font.PLAIN, 14)); // Font tombol
+        button.setBackground(new Color(173, 216, 230)); // Warna latar belakang tombol
+        button.setForeground(new Color(0, 51, 102)); // Warna teks tombol
+        button.setFocusPainted(false); // Menghilangkan garis fokus tombol
+        button.setBorder(BorderFactory.createLineBorder(new Color(0, 51, 102), 2)); // Border tombol
+        button.setPreferredSize(new Dimension(150, 50)); // Ukuran tombol
+
+        return button;
     }
 
     private void showPendaftaran() {
@@ -80,7 +94,10 @@ public class MainFrame extends JFrame {
     }
 
     private void showDropbox() {
-        JOptionPane.showMessageDialog(this, "Dropbox clicked");
+        SwingUtilities.invokeLater(() -> {
+            DropboxView dropboxView = new DropboxView();
+            dropboxView.setVisible(true);
+        });
     }
 
     public static void main(String[] args) {
