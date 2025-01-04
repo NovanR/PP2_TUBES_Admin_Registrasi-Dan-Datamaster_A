@@ -11,7 +11,7 @@ import java.util.List;
 public class SampahView extends JFrame {
 
     private JTable sampahTable;
-    private JButton addButton, updateButton, deleteButton, loadButton;
+    private JButton addButton, updateButton, deleteButton, loadButton, kembaliButton;
     private SampahController controller;
 
     public SampahView() {
@@ -33,11 +33,14 @@ public class SampahView extends JFrame {
         updateButton = new JButton("Update");
         deleteButton = new JButton("Hapus");
         loadButton = new JButton("Refresh");
+        kembaliButton = new JButton("Kembali");
+        kembaliButton.addActionListener(e -> kembaliKeMainFrame());
 
         buttonPanel.add(addButton);
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(loadButton);
+        buttonPanel.add(kembaliButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
 
@@ -162,6 +165,15 @@ public class SampahView extends JFrame {
         for (Integer idTps : tpsList) {
             comboBox.addItem(idTps);
         }
+    }
+
+    // Kembali ke main frame
+    private void kembaliKeMainFrame() {
+        this.dispose();
+        SwingUtilities.invokeLater(() -> {
+            MainFrame mainFrame = new MainFrame();
+            mainFrame.setVisible(true);
+        });
     }
 
     public static void main(String[] args) {
