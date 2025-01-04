@@ -37,11 +37,14 @@ public class BerkasView extends JFrame {
         updateButton = new JButton("Update");
         deleteButton = new JButton("Hapus");
         loadButton = new JButton("Refresh");
+        JButton kembaliButton = new JButton("Kembali");
+        kembaliButton.addActionListener(e -> kembaliKeMainFrame());
 
         buttonPanel.add(addButton);
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(loadButton);
+        buttonPanel.add(kembaliButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
 
@@ -183,6 +186,15 @@ public class BerkasView extends JFrame {
             });
         }
         berkasTable.setModel(model);
+    }
+
+    // Kembali ke main frame
+    private void kembaliKeMainFrame() {
+        this.dispose();
+        SwingUtilities.invokeLater(() -> {
+            MainFrame mainFrame = new MainFrame();
+            mainFrame.setVisible(true);
+        });
     }
 
     public static void main(String[] args) {

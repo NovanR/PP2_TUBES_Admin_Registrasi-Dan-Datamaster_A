@@ -19,6 +19,13 @@ public class KurirView extends JFrame {
         initUI();
     }
 
+    private JTable getTable() {
+        // Mengambil referensi JTable yang ada pada GUI
+        JPanel mainPanel = (JPanel) getContentPane().getComponent(0);
+        JScrollPane scrollPane = (JScrollPane) mainPanel.getComponent(1);
+        return (JTable) scrollPane.getViewport().getView();
+    }
+
     private void initUI() {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
@@ -61,11 +68,15 @@ public class KurirView extends JFrame {
         JButton refreshButton = new JButton("Refresh");
         refreshButton.addActionListener(e -> refreshTable(table));
 
+        JButton kembaliButton = new JButton("Kembali");
+        kembaliButton.addActionListener(e -> kembaliKeMainFrame());
+
         JPanel footerPanel = new JPanel();
         footerPanel.add(addButton);
         footerPanel.add(updateButton);
         footerPanel.add(deleteButton);
         footerPanel.add(refreshButton);
+        footerPanel.add(kembaliButton);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
@@ -86,8 +97,8 @@ public class KurirView extends JFrame {
         JTextField alamatField = new JTextField();
         JTextField imageField = new JTextField();
 
-        JRadioButton terimaButton = new JRadioButton("Terima");
-        JRadioButton tolakButton = new JRadioButton("Tolak");
+        JRadioButton terimaButton = new JRadioButton("DISETUJUI");
+        JRadioButton tolakButton = new JRadioButton("DITolak");
         ButtonGroup statusGroup = new ButtonGroup();
         statusGroup.add(terimaButton);
         statusGroup.add(tolakButton);
@@ -124,6 +135,8 @@ public class KurirView extends JFrame {
                     status);
             controller.addKurir(kurir);
             JOptionPane.showMessageDialog(null, "Data berhasil ditambahkan!");
+
+            refreshTable(getTable());
         }
     }
 
@@ -182,7 +195,7 @@ public class KurirView extends JFrame {
         if (option == JOptionPane.OK_OPTION) {
             String newJenisKelamin = lakiButton.isSelected() ? "Laki-laki"
                     : perempuanButton.isSelected() ? "Perempuan" : "";
-            String newStatus = terimaButton.isSelected() ? "Terima" : tolakButton.isSelected() ? "Tolak" : "";
+            String newStatus = terimaButton.isSelected() ? "DISETUJUI" : tolakButton.isSelected() ? "DITOLAK" : "";
 
             if (newJenisKelamin.isEmpty() || newStatus.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Silakan lengkapi semua pilihan!");
@@ -241,6 +254,15 @@ public class KurirView extends JFrame {
             JOptionPane.showMessageDialog(null, "Data berhasil dihapus!");
             refreshTable(table);
         }
+    }
+
+    // Kembali ke main frame
+    private void kembaliKeMainFrame() {
+        this.dispose();
+        SwingUtilities.invokeLater(() -> {
+            MainFrame mainFrame = new MainFrame();
+            mainFrame.setVisible(true);
+        });
     }
 
     public static void main(String[] args) {
