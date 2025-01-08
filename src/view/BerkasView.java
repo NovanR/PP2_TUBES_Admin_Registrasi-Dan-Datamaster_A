@@ -11,6 +11,11 @@ import org.apache.ibatis.session.SqlSession;
 
 import java.awt.*;
 import java.util.List;
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+import java.io.FileOutputStream;
+import java.awt.Font;
 
 public class BerkasView extends JFrame {
 
@@ -36,6 +41,8 @@ public class BerkasView extends JFrame {
         addButton = new JButton("Tambah");
         updateButton = new JButton("Update");
         deleteButton = new JButton("Hapus");
+        JButton exportButton = new JButton("Export PDF");
+
         loadButton = new JButton("Refresh");
         JButton kembaliButton = new JButton("Kembali");
         kembaliButton.addActionListener(e -> kembaliKeMainFrame());
@@ -44,6 +51,7 @@ public class BerkasView extends JFrame {
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(loadButton);
+        buttonPanel.add(exportButton);
         buttonPanel.add(kembaliButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
@@ -61,6 +69,7 @@ public class BerkasView extends JFrame {
         });
         deleteButton.addActionListener(e -> deleteBerkas());
         loadButton.addActionListener(e -> loadData());
+        exportButton.addActionListener(e -> exportToPdf());
 
         // Load data saat aplikasi dimulai
         loadData();
@@ -187,6 +196,59 @@ public class BerkasView extends JFrame {
         }
         berkasTable.setModel(model);
     }
+    
+    // PDF REPORT
+    // PDF REPORT
+private void exportToPdf() {
+    List<BerkasKurir> berkasList = controller.getAllBerkas();
+    if (berkasList.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Tidak ada data untuk diekspor!");
+        return;
+    }
+
+    try {
+        // Membuat dokumen PDF
+        Document document = new Document(PageSize.A4);
+        String outputPath = System.getProperty("user.dir") + "/data_berkas.pdf";
+        PdfWriter.getInstance(document, new FileOutputStream(outputPath));
+
+        document.open();
+        document.add(new Paragraph("Laporan Data Berkas", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
+        document.add(new Paragraph(" "));
+
+        // Membuat tabel untuk data berkas
+        PdfPTable table = new PdfPTable(5); // Lima kolom
+        table.setWidthPercentage(100);
+        table.setSpacingBefore(10f);
+        table.setSpacingAfter(10f);
+        table.setWidths(new float[]{1f, 1.5f, 2f, 2f, 1.5f});
+
+        // Header tabel
+        table.addCell("ID Berkas");
+        table.addCell("ID Kurir");
+        table.addCell("ID KTP");
+        table.addCell("ID SIM");
+        table.addCell("Status");
+
+        // Isi tabel dengan data berkas
+        for (BerkasKurir berkas : berkasList) {
+            table.addCell(String.valueOf(berkas.getIdBerkas()));
+            table.addCell(String.valueOf(berkas.getIdKurir()));
+            table.addCell(berkas.getIdKtp());
+            table.addCell(berkas.getIdSim());
+            table.addCell(berkas.getStatus());
+        }
+
+        // Menambahkan tabel ke dokumen
+        document.add(table);
+        document.close();
+
+        // Pesan keberhasilan
+        JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " + outputPath);
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " + e.getMessage());
+    }
+}
 
     // Kembali ke main frame
     private void kembaliKeMainFrame() {

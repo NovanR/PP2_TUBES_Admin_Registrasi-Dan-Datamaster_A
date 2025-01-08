@@ -6,8 +6,14 @@ import model.Kurir;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+import java.io.FileOutputStream;
+import java.awt.Font;
 
 public class KurirView extends JFrame {
+
     private KurirController controller;
 
     public KurirView() {
@@ -35,7 +41,7 @@ public class KurirView extends JFrame {
         mainPanel.add(headerLabel, BorderLayout.NORTH);
 
         // Table
-        String[] columnNames = { "ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "status" };
+        String[] columnNames = {"ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "status"};
         List<Kurir> kurirList = controller.getAllKurir();
         Object[][] data = new Object[kurirList.size()][8];
 
@@ -65,6 +71,9 @@ public class KurirView extends JFrame {
         JButton deleteButton = new JButton("Hapus");
         deleteButton.addActionListener(e -> deleteKurir(table));
 
+        JButton exportPdfButton = new JButton("Export PDF");
+        exportPdfButton.addActionListener(e -> exportToPdf());
+
         JButton kembaliButton = new JButton("Kembali");
         kembaliButton.addActionListener(e -> kembaliKeMainFrame());
 
@@ -72,6 +81,7 @@ public class KurirView extends JFrame {
         footerPanel.add(addButton);
         footerPanel.add(updateButton);
         footerPanel.add(deleteButton);
+        footerPanel.add(exportPdfButton);
         footerPanel.add(kembaliButton);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
@@ -99,13 +109,13 @@ public class KurirView extends JFrame {
         statusGroup.add(tolakButton);
 
         Object[] message = {
-                "Nama:", namaField,
-                "Jenis Kelamin:", lakiButton, perempuanButton,
-                "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
-                "No HP:", noHPField,
-                "Alamat:", alamatField,
-                "Image Path:", imageField,
-                "Status:", terimaButton, tolakButton
+            "Nama:", namaField,
+            "Jenis Kelamin:", lakiButton, perempuanButton,
+            "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
+            "No HP:", noHPField,
+            "Alamat:", alamatField,
+            "Image Path:", imageField,
+            "Status:", terimaButton, tolakButton
         };
 
         int option = JOptionPane.showConfirmDialog(null, message, "Add Kurir", JOptionPane.OK_CANCEL_OPTION);
@@ -196,13 +206,13 @@ public class KurirView extends JFrame {
         }
 
         Object[] message = {
-                "Nama:", namaField,
-                "Jenis Kelamin:", lakiButton, perempuanButton,
-                "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
-                "No HP:", noHPField,
-                "Alamat:", alamatField,
-                "Image Path:", imageField,
-                "Status:", terimaButton, tolakButton
+            "Nama:", namaField,
+            "Jenis Kelamin:", lakiButton, perempuanButton,
+            "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
+            "No HP:", noHPField,
+            "Alamat:", alamatField,
+            "Image Path:", imageField,
+            "Status:", terimaButton, tolakButton
         };
 
         int option = JOptionPane.showConfirmDialog(null, message, "Update Kurir", JOptionPane.OK_CANCEL_OPTION);
@@ -269,8 +279,8 @@ public class KurirView extends JFrame {
             data[i][7] = kurir.getStatus();
         }
 
-        table.setModel(new javax.swing.table.DefaultTableModel(data, new String[] {
-                "ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "Status"
+        table.setModel(new javax.swing.table.DefaultTableModel(data, new String[]{
+            "ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "Status"
         }));
     }
 
@@ -289,6 +299,60 @@ public class KurirView extends JFrame {
             controller.deleteKurir(id);
             JOptionPane.showMessageDialog(null, "Data berhasil dihapus!");
             refreshTable(table);
+        }
+    }
+
+    // PDF REPORT
+    private void exportToPdf() {
+        List<Kurir> kurirList = controller.getAllKurir();
+        if (kurirList.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Tidak ada data untuk diekspor!");
+            return;
+        }
+
+        try {
+            Document document = new Document(PageSize.A4);
+            String outputPath = System.getProperty("user.dir") + "/data_kurir.pdf";
+            PdfWriter.getInstance(document, new FileOutputStream(outputPath));
+
+            document.open();
+            document.add(new Paragraph("Laporan Data Kurir", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
+            document.add(new Paragraph(" "));
+
+            PdfPTable table = new PdfPTable(8); // Delapan kolom
+            table.setWidthPercentage(100);
+            table.setSpacingBefore(10f);
+            table.setSpacingAfter(10f);
+            table.setWidths(new float[]{1f, 2f, 1.5f, 2f, 2f, 2f, 2f, 1f});
+
+            // Header tabel
+            table.addCell("ID");
+            table.addCell("Nama");
+            table.addCell("Jenis Kelamin");
+            table.addCell("Tanggal Lahir");
+            table.addCell("No HP");
+            table.addCell("Alamat");
+            table.addCell("Image Path");
+            table.addCell("Status");
+
+            // Isi tabel
+            for (Kurir kurir : kurirList) {
+                table.addCell(String.valueOf(kurir.getIdKurir()));
+                table.addCell(kurir.getNamaKurir());
+                table.addCell(kurir.getJenisKelamin());
+                table.addCell(kurir.getTanggalLahir().toString());
+                table.addCell(kurir.getNoHP());
+                table.addCell(kurir.getAlamat());
+                table.addCell(kurir.getImage());
+                table.addCell(kurir.getStatus());
+            }
+
+            document.add(table);
+            document.close();
+
+            JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " + outputPath);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " + e.getMessage());
         }
     }
 

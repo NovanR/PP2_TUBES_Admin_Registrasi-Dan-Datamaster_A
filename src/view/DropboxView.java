@@ -6,8 +6,14 @@ import model.Dropbox;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+import java.io.FileOutputStream;
+import java.awt.Font;
 
 public class DropboxView extends JFrame {
+
     private DropboxController controller;
 
     public DropboxView() {
@@ -28,7 +34,7 @@ public class DropboxView extends JFrame {
         mainPanel.add(headerLabel, BorderLayout.NORTH);
 
         // Table
-        String[] columnNames = { "ID", "Nama", "No HP", "Alamat" };
+        String[] columnNames = {"ID", "Nama", "No HP", "Alamat"};
         JTable table = new JTable();
         refreshTable(table);
         JScrollPane scrollPane = new JScrollPane(table);
@@ -53,6 +59,8 @@ public class DropboxView extends JFrame {
             refreshTable(table);
         });
 
+        JButton exportPdfButton = new JButton("Ekspor PDF");
+        exportPdfButton.addActionListener(e -> exportToPdf());
         // JButton refreshButton = new JButton("Refresh");
         // refreshButton.addActionListener(e -> refreshTable(table));
 
@@ -63,6 +71,8 @@ public class DropboxView extends JFrame {
         footerPanel.add(addButton);
         footerPanel.add(updateButton);
         footerPanel.add(deleteButton);
+        footerPanel.add(exportPdfButton);
+
         // footerPanel.add(refreshButton);
         footerPanel.add(kembaliButton);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
@@ -77,10 +87,9 @@ public class DropboxView extends JFrame {
         JTextField alamatField = new JTextField();
 
         Object[] message = {
-                "Nama:", namaField,
-                "No HP:", noHPField,
-                "Alamat:", alamatField,
-        };
+            "Nama:", namaField,
+            "No HP:", noHPField,
+            "Alamat:", alamatField,};
 
         int option = JOptionPane.showConfirmDialog(null, message, "Add Dropbox", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
@@ -124,10 +133,9 @@ public class DropboxView extends JFrame {
         JTextField alamatField = new JTextField((String) table.getValueAt(selectedRow, 3));
 
         Object[] message = {
-                "Nama:", namaField,
-                "No HP:", noHPField,
-                "Alamat:", alamatField,
-        };
+            "Nama:", namaField,
+            "No HP:", noHPField,
+            "Alamat:", alamatField,};
 
         int option = JOptionPane.showConfirmDialog(null, message, "Update Dropbox", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
@@ -175,8 +183,8 @@ public class DropboxView extends JFrame {
                 data[i][3] = dropbox.getAlamatTps();
             }
 
-            table.setModel(new javax.swing.table.DefaultTableModel(data, new String[] {
-                    "ID", "Nama", "No HP", "Alamat"
+            table.setModel(new javax.swing.table.DefaultTableModel(data, new String[]{
+                "ID", "Nama", "No HP", "Alamat"
             }));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Gagal memuat data: " + e.getMessage());
@@ -201,6 +209,52 @@ public class DropboxView extends JFrame {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Gagal menghapus data: " + e.getMessage());
             }
+        }
+    }
+
+    // PDF REPORT
+    private void exportToPdf() {
+        List<Dropbox> dropboxList = controller.getAllDropbox();
+        if (dropboxList.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Tidak ada data untuk diekspor!");
+            return;
+        }
+
+        try {
+            Document document = new Document(PageSize.A4);
+            String outputPath = System.getProperty("user.dir") + "/data_dropbox.pdf";
+            PdfWriter.getInstance(document, new FileOutputStream(outputPath));
+
+            document.open();
+            document.add(new Paragraph("Laporan Data Dropbox", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
+            document.add(new Paragraph(" "));
+
+            PdfPTable table = new PdfPTable(4); // Empat kolom
+            table.setWidthPercentage(100);
+            table.setSpacingBefore(10f);
+            table.setSpacingAfter(10f);
+            table.setWidths(new float[]{1f, 2f, 2f, 2f});
+
+            // Header tabel
+            table.addCell("ID");
+            table.addCell("Nama");
+            table.addCell("No HP");
+            table.addCell("Alamat");
+
+            // Isi tabel
+            for (Dropbox dropbox : dropboxList) {
+                table.addCell(String.valueOf(dropbox.getIdTps()));
+                table.addCell(dropbox.getNamaTps());
+                table.addCell(dropbox.getNoHpTps());
+                table.addCell(dropbox.getAlamatTps());
+            }
+
+            document.add(table);
+            document.close();
+
+            JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " + outputPath);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " + e.getMessage());
         }
     }
 
