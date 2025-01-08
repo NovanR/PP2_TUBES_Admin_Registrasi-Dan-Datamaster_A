@@ -85,6 +85,7 @@ public class KonversiPoin extends JFrame {
         table.setModel(new javax.swing.table.DefaultTableModel(data, columnNames));
     }
 
+    // ADD
     private void showAddDialog() {
         JDialog dialog = new JDialog(this, "Tambah Data Poin", true);
         dialog.setLayout(new BorderLayout());
@@ -162,6 +163,11 @@ public class KonversiPoin extends JFrame {
                 int idPengguna = (Integer) idPenggunaCombo.getSelectedItem();
                 int kategoriSampah = (Integer) kategoriSampahCombo.getSelectedItem();
                 double berat = Double.parseDouble(beratField.getText());
+                if (berat <= 0) {
+                    JOptionPane.showMessageDialog(dialog, "Berat harus berupa angka positif!", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 int totalPoin = Integer.parseInt(totalPoinLabel.getText());
 
                 Poin poin = new Poin();
@@ -176,6 +182,9 @@ public class KonversiPoin extends JFrame {
                 dialog.dispose();
 
                 refreshTable(); // Segarkan tabel
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(dialog, "Berat harus berupa angka yang valid!", "Error",
+                        JOptionPane.ERROR_MESSAGE);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(dialog, "Terjadi kesalahan: " + ex.getMessage(), "Error",
                         JOptionPane.ERROR_MESSAGE);
@@ -187,6 +196,7 @@ public class KonversiPoin extends JFrame {
         dialog.setVisible(true);
     }
 
+    // UPDATE
     private void editSelectedRow() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow == -1) {
@@ -283,6 +293,11 @@ public class KonversiPoin extends JFrame {
                 int idPengguna = (Integer) idPenggunaCombo.getSelectedItem();
                 int kategoriSampah = (Integer) kategoriSampahCombo.getSelectedItem();
                 double berat = Double.parseDouble(beratField.getText());
+                if (berat <= 0) {
+                    JOptionPane.showMessageDialog(dialog, "Berat harus berupa angka positif!", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 int totalPoin = Integer.parseInt(totalPoinLabel.getText());
 
                 // Memperbarui objek poin dengan data yang baru
@@ -300,6 +315,9 @@ public class KonversiPoin extends JFrame {
 
                 // Refresh data tabel
                 refreshTable();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(dialog, "Berat harus berupa angka yang valid!", "Error",
+                        JOptionPane.ERROR_MESSAGE);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(dialog, "Terjadi kesalahan: " + ex.getMessage(), "Error",
                         JOptionPane.ERROR_MESSAGE);

@@ -19,12 +19,12 @@ public class MasyarakatView extends JFrame {
         initUI();
     }
 
-    private JTable getTable() {
-        // OTOMATIS REFRESH
-        JPanel mainPanel = (JPanel) getContentPane().getComponent(0);
-        JScrollPane scrollPane = (JScrollPane) mainPanel.getComponent(1);
-        return (JTable) scrollPane.getViewport().getView();
-    }
+    // private JTable getTable() {
+    // // OTOMATIS REFRESH
+    // JPanel mainPanel = (JPanel) getContentPane().getComponent(0);
+    // JScrollPane scrollPane = (JScrollPane) mainPanel.getComponent(1);
+    // return (JTable) scrollPane.getViewport().getView();
+    // }
 
     private void initUI() {
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -56,17 +56,14 @@ public class MasyarakatView extends JFrame {
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         // Footer
-        JButton addButton = new JButton("Add");
+        JButton addButton = new JButton("Tambah");
         addButton.addActionListener(e -> addMasyarakat());
 
-        JButton updateButton = new JButton("Update");
+        JButton updateButton = new JButton("Edit");
         updateButton.addActionListener(e -> updateMasyarakat(table));
 
-        JButton deleteButton = new JButton("Delete");
+        JButton deleteButton = new JButton("Hapus");
         deleteButton.addActionListener(e -> deleteMasyarakat(table));
-
-        // JButton refreshButton = new JButton("Refresh");
-        // refreshButton.addActionListener(e -> refreshTable(table));
 
         JButton kembaliButton = new JButton("Kembali");
         kembaliButton.addActionListener(e -> kembaliKeMainFrame());
@@ -166,16 +163,16 @@ public class MasyarakatView extends JFrame {
         JTextField alamatField = new JTextField((String) table.getValueAt(selectedRow, 5));
         JTextField imageField = new JTextField((String) table.getValueAt(selectedRow, 6));
 
-        JRadioButton terimaButton = new JRadioButton("Terima");
-        JRadioButton tolakButton = new JRadioButton("Tolak");
+        JRadioButton terimaButton = new JRadioButton("DITERIMA");
+        JRadioButton tolakButton = new JRadioButton("DITOLAK");
         ButtonGroup statusGroup = new ButtonGroup();
         statusGroup.add(terimaButton);
         statusGroup.add(tolakButton);
 
         String currentStatus = table.getValueAt(selectedRow, 7).toString();
-        if ("Terima".equalsIgnoreCase(currentStatus)) {
+        if ("DITERIMA".equalsIgnoreCase(currentStatus)) {
             terimaButton.setSelected(true);
-        } else if ("Tolak".equalsIgnoreCase(currentStatus)) {
+        } else if ("DITOLAK".equalsIgnoreCase(currentStatus)) {
             tolakButton.setSelected(true);
         }
 
@@ -193,7 +190,7 @@ public class MasyarakatView extends JFrame {
         if (option == JOptionPane.OK_OPTION) {
             String newJenisKelamin = lakiButton.isSelected() ? "Laki-laki"
                     : perempuanButton.isSelected() ? "Perempuan" : "";
-            String newStatus = terimaButton.isSelected() ? "Terima" : tolakButton.isSelected() ? "Tolak" : "";
+            String newStatus = terimaButton.isSelected() ? "DITERIMA" : tolakButton.isSelected() ? "DITOLAK" : "";
 
             if (newJenisKelamin.isEmpty() || newStatus.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Silakan lengkapi semua pilihan!");
@@ -212,6 +209,8 @@ public class MasyarakatView extends JFrame {
             controller.updateMasyarakat(masyarakat);
             JOptionPane.showMessageDialog(null, "Data berhasil diperbarui!");
         }
+
+        refreshTable(table);
     }
 
     // REFRESH
