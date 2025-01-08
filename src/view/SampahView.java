@@ -15,8 +15,7 @@ import java.util.List;
 public class SampahView extends JFrame {
 
     private JTable sampahTable;
-    private JButton addButton, updateButton, deleteButton, loadButton, exportPdfButton;
-    private JButton addButton, updateButton, deleteButton, loadButton, kembaliButton;
+    private JButton addButton, updateButton, deleteButton, loadButton,kembaliButton, exportPdfButton;
     private SampahController controller;
 
     public SampahView() {
