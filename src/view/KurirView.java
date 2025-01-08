@@ -20,7 +20,7 @@ public class KurirView extends JFrame {
     }
 
     private JTable getTable() {
-        // Mengambil referensi JTable yang ada pada GUI
+        // OTOMATIS REFRESH
         JPanel mainPanel = (JPanel) getContentPane().getComponent(0);
         JScrollPane scrollPane = (JScrollPane) mainPanel.getComponent(1);
         return (JTable) scrollPane.getViewport().getView();
@@ -65,9 +65,6 @@ public class KurirView extends JFrame {
         JButton deleteButton = new JButton("Delete");
         deleteButton.addActionListener(e -> deleteKurir(table));
 
-        JButton refreshButton = new JButton("Refresh");
-        refreshButton.addActionListener(e -> refreshTable(table));
-
         JButton kembaliButton = new JButton("Kembali");
         kembaliButton.addActionListener(e -> kembaliKeMainFrame());
 
@@ -75,7 +72,6 @@ public class KurirView extends JFrame {
         footerPanel.add(addButton);
         footerPanel.add(updateButton);
         footerPanel.add(deleteButton);
-        footerPanel.add(refreshButton);
         footerPanel.add(kembaliButton);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
@@ -84,7 +80,6 @@ public class KurirView extends JFrame {
 
     // ADD KURIR
     private void addKurir() {
-        // Dialog untuk menambah data baru
         JTextField namaField = new JTextField();
         JRadioButton lakiButton = new JRadioButton("Laki-laki");
         JRadioButton perempuanButton = new JRadioButton("Perempuan");
@@ -214,6 +209,8 @@ public class KurirView extends JFrame {
             controller.updateKurir(kurir);
             JOptionPane.showMessageDialog(null, "Data berhasil diperbarui!");
         }
+
+        refreshTable(getTable());
     }
 
     // REFRESH

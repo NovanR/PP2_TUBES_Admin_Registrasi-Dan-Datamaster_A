@@ -19,6 +19,13 @@ public class MasyarakatView extends JFrame {
         initUI();
     }
 
+    private JTable getTable() {
+        // OTOMATIS REFRESH
+        JPanel mainPanel = (JPanel) getContentPane().getComponent(0);
+        JScrollPane scrollPane = (JScrollPane) mainPanel.getComponent(1);
+        return (JTable) scrollPane.getViewport().getView();
+    }
+
     private void initUI() {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
@@ -58,8 +65,8 @@ public class MasyarakatView extends JFrame {
         JButton deleteButton = new JButton("Delete");
         deleteButton.addActionListener(e -> deleteMasyarakat(table));
 
-        JButton refreshButton = new JButton("Refresh");
-        refreshButton.addActionListener(e -> refreshTable(table));
+        // JButton refreshButton = new JButton("Refresh");
+        // refreshButton.addActionListener(e -> refreshTable(table));
 
         JButton kembaliButton = new JButton("Kembali");
         kembaliButton.addActionListener(e -> kembaliKeMainFrame());
@@ -68,7 +75,7 @@ public class MasyarakatView extends JFrame {
         footerPanel.add(addButton);
         footerPanel.add(updateButton);
         footerPanel.add(deleteButton);
-        footerPanel.add(refreshButton);
+        // footerPanel.add(refreshButton);
         footerPanel.add(kembaliButton);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
