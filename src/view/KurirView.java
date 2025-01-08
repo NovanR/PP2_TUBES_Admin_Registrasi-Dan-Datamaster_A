@@ -56,13 +56,13 @@ public class KurirView extends JFrame {
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         // Footer
-        JButton addButton = new JButton("Add");
+        JButton addButton = new JButton("Tambah");
         addButton.addActionListener(e -> addKurir());
 
-        JButton updateButton = new JButton("Update");
+        JButton updateButton = new JButton("Edit");
         updateButton.addActionListener(e -> updateKurir(table));
 
-        JButton deleteButton = new JButton("Delete");
+        JButton deleteButton = new JButton("Hapus");
         deleteButton.addActionListener(e -> deleteKurir(table));
 
         JButton kembaliButton = new JButton("Kembali");
@@ -93,7 +93,7 @@ public class KurirView extends JFrame {
         JTextField imageField = new JTextField();
 
         JRadioButton terimaButton = new JRadioButton("DISETUJUI");
-        JRadioButton tolakButton = new JRadioButton("DITolak");
+        JRadioButton tolakButton = new JRadioButton("DITOLAK");
         ButtonGroup statusGroup = new ButtonGroup();
         statusGroup.add(terimaButton);
         statusGroup.add(tolakButton);
@@ -119,6 +119,26 @@ public class KurirView extends JFrame {
                 return;
             }
 
+            // Validasi Nama
+            if (!namaField.getText().matches("[a-zA-Z\\s]+")) {
+                JOptionPane.showMessageDialog(null, "Nama hanya boleh mengandung huruf dan spasi!");
+                return;
+            }
+
+            // Validasi tanggal lahir
+            try {
+                java.sql.Date.valueOf(tanggalLahirField.getText()); // Validasi format tanggal
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(null, "Tanggal lahir harus dalam format YYYY-MM-DD!");
+                return;
+            }
+
+            // Validasi Nomor HP
+            if (!noHPField.getText().matches("\\d+")) {
+                JOptionPane.showMessageDialog(null, "Nomor HP hanya boleh mengandung angka!");
+                return;
+            }
+
             Kurir kurir = new Kurir(
                     0, // ID akan digenerate oleh database
                     namaField.getText(),
@@ -130,9 +150,8 @@ public class KurirView extends JFrame {
                     status);
             controller.addKurir(kurir);
             JOptionPane.showMessageDialog(null, "Data berhasil ditambahkan!");
-
-            refreshTable(getTable());
         }
+        refreshTable(getTable());
     }
 
     // UPDATE
@@ -197,6 +216,26 @@ public class KurirView extends JFrame {
                 return;
             }
 
+            // Validasi Nama
+            if (!namaField.getText().matches("[a-zA-Z\\s]+")) {
+                JOptionPane.showMessageDialog(null, "Nama hanya boleh mengandung huruf dan spasi!");
+                return;
+            }
+
+            // Validasi tanggal lahir
+            try {
+                java.sql.Date.valueOf(tanggalLahirField.getText()); // Validasi format tanggal
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(null, "Tanggal lahir harus dalam format YYYY-MM-DD!");
+                return;
+            }
+
+            // Validasi Nomor HP
+            if (!noHPField.getText().matches("\\d+")) {
+                JOptionPane.showMessageDialog(null, "Nomor HP hanya boleh mengandung angka!");
+                return;
+            }
+
             Kurir kurir = new Kurir(
                     id,
                     namaField.getText(),
@@ -210,7 +249,7 @@ public class KurirView extends JFrame {
             JOptionPane.showMessageDialog(null, "Data berhasil diperbarui!");
         }
 
-        refreshTable(getTable());
+        refreshTable(table);
     }
 
     // REFRESH

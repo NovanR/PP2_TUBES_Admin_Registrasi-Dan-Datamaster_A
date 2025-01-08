@@ -35,26 +35,26 @@ public class DropboxView extends JFrame {
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         // Footer
-        JButton addButton = new JButton("Add");
+        JButton addButton = new JButton("Tambah");
         addButton.addActionListener(e -> {
             addDropbox();
             refreshTable(table);
         });
 
-        JButton updateButton = new JButton("Update");
+        JButton updateButton = new JButton("Edit");
         updateButton.addActionListener(e -> {
             updateDropbox(table);
             refreshTable(table);
         });
 
-        JButton deleteButton = new JButton("Delete");
+        JButton deleteButton = new JButton("Hapus");
         deleteButton.addActionListener(e -> {
             deleteDropbox(table);
             refreshTable(table);
         });
 
-        JButton refreshButton = new JButton("Refresh");
-        refreshButton.addActionListener(e -> refreshTable(table));
+        // JButton refreshButton = new JButton("Refresh");
+        // refreshButton.addActionListener(e -> refreshTable(table));
 
         JButton kembaliButton = new JButton("Kembali");
         kembaliButton.addActionListener(e -> kembaliKeMainFrame());
@@ -63,7 +63,7 @@ public class DropboxView extends JFrame {
         footerPanel.add(addButton);
         footerPanel.add(updateButton);
         footerPanel.add(deleteButton);
-        footerPanel.add(refreshButton);
+        // footerPanel.add(refreshButton);
         footerPanel.add(kembaliButton);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
@@ -84,6 +84,18 @@ public class DropboxView extends JFrame {
 
         int option = JOptionPane.showConfirmDialog(null, message, "Add Dropbox", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
+            // Validasi Nama
+            if (!namaField.getText().matches("[a-zA-Z\\s]+")) {
+                JOptionPane.showMessageDialog(null, "Nama hanya boleh mengandung huruf dan spasi!");
+                return;
+            }
+
+            // Validasi No HP
+            if (!noHPField.getText().matches("\\d+")) {
+                JOptionPane.showMessageDialog(null, "No HP hanya boleh berupa angka!");
+                return;
+            }
+
             try {
                 Dropbox dropbox = new Dropbox(
                         0, // ID akan digenerate oleh database
@@ -119,6 +131,18 @@ public class DropboxView extends JFrame {
 
         int option = JOptionPane.showConfirmDialog(null, message, "Update Dropbox", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
+
+            // Validasi Nama
+            if (!namaField.getText().matches("[a-zA-Z\\s]+")) {
+                JOptionPane.showMessageDialog(null, "Nama hanya boleh mengandung huruf dan spasi!");
+                return;
+            }
+
+            // Validasi No HP
+            if (!noHPField.getText().matches("\\d+")) {
+                JOptionPane.showMessageDialog(null, "No HP hanya boleh berupa angka!");
+                return;
+            }
             try {
                 Dropbox dropbox = new Dropbox(
                         id,
