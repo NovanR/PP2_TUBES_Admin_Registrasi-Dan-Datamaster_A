@@ -15,8 +15,7 @@ import java.util.List;
 public class SampahView extends JFrame {
 
     private JTable sampahTable;
-    private JButton addButton, updateButton, deleteButton, loadButton, exportPdfButton;
-    private JButton addButton, updateButton, deleteButton, loadButton, kembaliButton;
+    private JButton addButton, updateButton, deleteButton, loadButton, kembaliButton, exportPdfButton;
     private SampahController controller;
 
     public SampahView() {
@@ -64,7 +63,7 @@ public class SampahView extends JFrame {
         });
         deleteButton.addActionListener(e -> deleteSampah());
         loadButton.addActionListener(e -> loadData());
-        exportPdfButton.addActionListener(e -> exportToPdf()); // Tambahkan listener untuk ekspor PDF
+        // exportPdfButton.addActionListener(e -> exportToPdf());
 
         // Load data saat aplikasi dimulai
         loadData();
@@ -72,50 +71,53 @@ public class SampahView extends JFrame {
         setVisible(true);
     }
 
-    private void exportToPdf() {
-        List<Sampah> sampahList = controller.getAllSampah();
-        if (sampahList.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Tidak ada data untuk diekspor!");
-            return;
-        }
+    // private void exportToPdf() {
+    // List<Sampah> sampahList = controller.getAllSampah();
+    // if (sampahList.isEmpty()) {
+    // JOptionPane.showMessageDialog(this, "Tidak ada data untuk diekspor!");
+    // return;
+    // }
 
-        try {
-            Document document = new Document(PageSize.A4);
-            String outputPath = System.getProperty("user.dir") + "/data_sampah.pdf";
-            PdfWriter.getInstance(document, new FileOutputStream(outputPath));
+    // try {
+    // Document document = new Document(PageSize.A4);
+    // String outputPath = System.getProperty("user.dir") + "/data_sampah.pdf";
+    // PdfWriter.getInstance(document, new FileOutputStream(outputPath));
 
-            document.open();
-            document.add(new Paragraph("Laporan Data Sampah", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
-            document.add(new Paragraph(" "));
-            
-            PdfPTable table = new PdfPTable(4); // Empat kolom
-            table.setWidthPercentage(100);
-            table.setSpacingBefore(10f);
-            table.setSpacingAfter(10f);
-            table.setWidths(new float[] {1f, 2f, 2f, 1f});
+    // document.open();
+    // document.add(new Paragraph("Laporan Data Sampah",
+    // FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
+    // document.add(new Paragraph(" "));
 
-            // Header tabel
-            table.addCell("ID Sampah");
-            table.addCell("Kategori Sampah");
-            table.addCell("Jenis Sampah");
-            table.addCell("ID TPS");
+    // PdfPTable table = new PdfPTable(4); // Empat kolom
+    // table.setWidthPercentage(100);
+    // table.setSpacingBefore(10f);
+    // table.setSpacingAfter(10f);
+    // table.setWidths(new float[] { 1f, 2f, 2f, 1f });
 
-            // Isi tabel
-            for (Sampah sampah : sampahList) {
-                table.addCell(String.valueOf(sampah.getIdSampah()));
-                table.addCell(sampah.getKategoriSampah());
-                table.addCell(sampah.getJenisSampah());
-                table.addCell(String.valueOf(sampah.getIdTps()));
-            }
+    // // Header tabel
+    // table.addCell("ID Sampah");
+    // table.addCell("Kategori Sampah");
+    // table.addCell("Jenis Sampah");
+    // table.addCell("ID TPS");
 
-            document.add(table);
-            document.close();
+    // // Isi tabel
+    // for (Sampah sampah : sampahList) {
+    // table.addCell(String.valueOf(sampah.getIdSampah()));
+    // table.addCell(sampah.getKategoriSampah());
+    // table.addCell(sampah.getJenisSampah());
+    // table.addCell(String.valueOf(sampah.getIdTps()));
+    // }
 
-            JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " + outputPath);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " + e.getMessage());
-        }
-    }
+    // document.add(table);
+    // document.close();
+
+    // JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " +
+    // outputPath);
+    // } catch (Exception e) {
+    // JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " +
+    // e.getMessage());
+    // }
+    // }
 
     private void showInputDialog(String action, Sampah sampah) {
         JTextField idSampahField = new JTextField();
