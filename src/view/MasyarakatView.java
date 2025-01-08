@@ -119,6 +119,30 @@ public class MasyarakatView extends JFrame {
                     : perempuanButton.isSelected() ? "Perempuan" : "";
             String status = terimaButton.isSelected() ? "DISETUJUI" : tolakButton.isSelected() ? "DITOLAK" : "";
 
+            if (!namaField.getText().matches("[a-zA-Z\\s]+")) {
+                JOptionPane.showMessageDialog(null, "Nama hanya boleh mengandung huruf dan spasi!");
+                return;
+            }
+            
+            // Validasi tanggal lahir
+        String tanggalLahirInput = tanggalLahirField.getText();
+        try {
+            java.time.LocalDate date = java.time.LocalDate.parse(tanggalLahirInput);
+            if (date.getMonthValue() < 1 || date.getMonthValue() > 12) {
+                JOptionPane.showMessageDialog(null, "Bulan yang dimasukkan tidak valid (harus antara 1-12)!");
+                return;
+            }
+        } catch (java.time.format.DateTimeParseException e) {
+            JOptionPane.showMessageDialog(null, "Format tanggal lahir tidak valid! Gunakan format YYYY-MM-DD.");
+            return;
+        }
+
+        // Validasi nomor HP
+        if (!noHPField.getText().matches("^[0-9]+$")) {
+            JOptionPane.showMessageDialog(null, "Nomor HP hanya boleh mengandung angka!");
+            return;
+        }
+
             if (jenisKelamin.isEmpty() || status.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Silakan lengkapi semua pilihan!");
                 return;
@@ -194,6 +218,31 @@ public class MasyarakatView extends JFrame {
             String newJenisKelamin = lakiButton.isSelected() ? "Laki-laki"
                     : perempuanButton.isSelected() ? "Perempuan" : "";
             String newStatus = terimaButton.isSelected() ? "Terima" : tolakButton.isSelected() ? "Tolak" : "";
+
+        // Validasi input nama
+        if (!namaField.getText().matches("[a-zA-Z\\s]+")) {
+            JOptionPane.showMessageDialog(null, "Nama hanya boleh mengandung huruf dan spasi!");
+            return;
+        }
+
+        // Validasi tanggal lahir
+        String tanggalLahirInput = tanggalLahirField.getText();
+        try {
+            java.time.LocalDate date = java.time.LocalDate.parse(tanggalLahirInput);
+            if (date.getMonthValue() < 1 || date.getMonthValue() > 12) {
+                JOptionPane.showMessageDialog(null, "Bulan yang dimasukkan tidak valid (harus antara 1-12)!");
+                return;
+            }
+        } catch (java.time.format.DateTimeParseException e) {
+            JOptionPane.showMessageDialog(null, "Format tanggal lahir tidak valid! Gunakan format YYYY-MM-DD.");
+            return;
+        }
+
+        // Validasi nomor HP
+        if (!noHPField.getText().matches("^[0-9]+$")) {
+            JOptionPane.showMessageDialog(null, "Nomor HP hanya boleh mengandung angka!");
+            return;
+        }
 
             if (newJenisKelamin.isEmpty() || newStatus.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Silakan lengkapi semua pilihan!");
