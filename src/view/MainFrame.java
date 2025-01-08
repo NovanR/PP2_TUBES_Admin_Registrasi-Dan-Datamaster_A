@@ -7,30 +7,51 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         setTitle("Main Menu");
-        setSize(400, 300);
+        setSize(500, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         initUI();
     }
 
     private void initUI() {
-        // Panel utama dengan layout GridLayout (2 baris dan 2 kolom)
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(2, 2, 10, 10)); // 2 baris, 2 kolom, spasi 10px antar tombol
+        mainPanel.setLayout(new GridBagLayout()); // Menggunakan GridBagLayout
+        GridBagConstraints gbc = new GridBagConstraints(); // 2 baris, 2 kolom, spasi 10px antar tombol
 
-        // Membuat tombol dengan fungsi dan gaya menarik
+        // judul di bagian atas
+        JLabel titleLabel = new JLabel("Selamat datang Admin", JLabel.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        titleLabel.setForeground(new Color(0, 51, 102));
+
+        // Set posisi dan jarak untuk titleLabel
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.insets = new Insets(20, 20, 10, 20); // Menambahkan jarak di sekitar title
+        mainPanel.add(titleLabel, gbc);
+
         JButton pendaftaranButton = createButton("Pendaftaran");
         JButton pengelolaanSampahButton = createButton("Pengelolaan Sampah");
         JButton konversiPoinButton = createButton("Konversi Poin");
         JButton dropboxButton = createButton("Dropbox");
 
-        // Menambahkan tombol ke panel utama
-        mainPanel.add(pendaftaranButton);
-        mainPanel.add(pengelolaanSampahButton);
-        mainPanel.add(konversiPoinButton);
-        mainPanel.add(dropboxButton);
+        // Set posisi dan jarak untuk tombol-tombol
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        gbc.insets = new Insets(10, 20, 10, 20); // Jarak untuk tombol
+        mainPanel.add(pendaftaranButton, gbc);
 
-        // Menambahkan aksi untuk tombol
+        gbc.gridx = 1;
+        mainPanel.add(pengelolaanSampahButton, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        mainPanel.add(konversiPoinButton, gbc);
+
+        gbc.gridx = 1;
+        mainPanel.add(dropboxButton, gbc);
+
         pendaftaranButton.addActionListener(e -> showPendaftaran());
         pengelolaanSampahButton.addActionListener(e -> showPengelolaanSampah());
         konversiPoinButton.addActionListener(e -> showKonversiPoin());
@@ -41,14 +62,14 @@ public class MainFrame extends JFrame {
     }
 
     private JButton createButton(String text) {
-        // Membuat tombol dengan teks dan gaya
         JButton button = new JButton(text);
         button.setFont(new Font("Arial", Font.PLAIN, 14)); // Font tombol
         button.setBackground(new Color(173, 216, 230)); // Warna latar belakang tombol
         button.setForeground(new Color(0, 51, 102)); // Warna teks tombol
         button.setFocusPainted(false); // Menghilangkan garis fokus tombol
         button.setBorder(BorderFactory.createLineBorder(new Color(0, 51, 102), 2)); // Border tombol
-        button.setPreferredSize(new Dimension(150, 50)); // Ukuran tombol
+        // Menentukan ukuran tombol
+        button.setPreferredSize(new Dimension(200, 80));
 
         return button;
     }
@@ -115,6 +136,7 @@ public class MainFrame extends JFrame {
     }
 
     private void showPengelolaanSampah() {
+        this.dispose();
         SwingUtilities.invokeLater(() -> {
             SampahView sampahView = new SampahView();
             sampahView.setVisible(true);
@@ -122,6 +144,7 @@ public class MainFrame extends JFrame {
     }
 
     private void showKonversiPoin() {
+        this.dispose();
         SwingUtilities.invokeLater(() -> {
             KonversiPoin konversiPoin = new KonversiPoin();
             konversiPoin.setVisible(true);
@@ -129,6 +152,7 @@ public class MainFrame extends JFrame {
     }
 
     private void showDropbox() {
+        this.dispose();
         SwingUtilities.invokeLater(() -> {
             DropboxView dropboxView = new DropboxView();
             dropboxView.setVisible(true);
