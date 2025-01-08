@@ -63,7 +63,7 @@ public class SampahView extends JFrame {
         });
         deleteButton.addActionListener(e -> deleteSampah());
         loadButton.addActionListener(e -> loadData());
-        // exportPdfButton.addActionListener(e -> exportToPdf());
+        exportPdfButton.addActionListener(e -> exportToPdf());
 
         // Load data saat aplikasi dimulai
         loadData();
@@ -71,53 +71,53 @@ public class SampahView extends JFrame {
         setVisible(true);
     }
 
-    // private void exportToPdf() {
-    // List<Sampah> sampahList = controller.getAllSampah();
-    // if (sampahList.isEmpty()) {
-    // JOptionPane.showMessageDialog(this, "Tidak ada data untuk diekspor!");
-    // return;
-    // }
+    private void exportToPdf() {
+    List<Sampah> sampahList = controller.getAllSampah();
+    if (sampahList.isEmpty()) {
+    JOptionPane.showMessageDialog(this, "Tidak ada data untuk diekspor!");
+    return;
+    }
 
-    // try {
-    // Document document = new Document(PageSize.A4);
-    // String outputPath = System.getProperty("user.dir") + "/data_sampah.pdf";
-    // PdfWriter.getInstance(document, new FileOutputStream(outputPath));
+    try {
+    Document document = new Document(PageSize.A4);
+    String outputPath = System.getProperty("user.dir") + "/data_sampah.pdf";
+    PdfWriter.getInstance(document, new FileOutputStream(outputPath));
 
-    // document.open();
-    // document.add(new Paragraph("Laporan Data Sampah",
-    // FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
-    // document.add(new Paragraph(" "));
+    document.open();
+    document.add(new Paragraph("Laporan Data Sampah",
+    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
+    document.add(new Paragraph(" "));
 
-    // PdfPTable table = new PdfPTable(4); // Empat kolom
-    // table.setWidthPercentage(100);
-    // table.setSpacingBefore(10f);
-    // table.setSpacingAfter(10f);
-    // table.setWidths(new float[] { 1f, 2f, 2f, 1f });
+    PdfPTable table = new PdfPTable(4); // Empat kolom
+    table.setWidthPercentage(100);
+    table.setSpacingBefore(10f);
+    table.setSpacingAfter(10f);
+    table.setWidths(new float[] { 1f, 2f, 2f, 1f });
 
-    // // Header tabel
-    // table.addCell("ID Sampah");
-    // table.addCell("Kategori Sampah");
-    // table.addCell("Jenis Sampah");
-    // table.addCell("ID TPS");
+    // Header tabel
+    table.addCell("ID Sampah");
+    table.addCell("Kategori Sampah");
+    table.addCell("Jenis Sampah");
+    table.addCell("ID TPS");
 
-    // // Isi tabel
-    // for (Sampah sampah : sampahList) {
-    // table.addCell(String.valueOf(sampah.getIdSampah()));
-    // table.addCell(sampah.getKategoriSampah());
-    // table.addCell(sampah.getJenisSampah());
-    // table.addCell(String.valueOf(sampah.getIdTps()));
-    // }
+    // Isi tabel
+    for (Sampah sampah : sampahList) {
+    table.addCell(String.valueOf(sampah.getIdSampah()));
+    table.addCell(sampah.getKategoriSampah());
+    table.addCell(sampah.getJenisSampah());
+    table.addCell(String.valueOf(sampah.getIdTps()));
+    }
 
-    // document.add(table);
-    // document.close();
+    document.add(table);
+    document.close();
 
-    // JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " +
-    // outputPath);
-    // } catch (Exception e) {
-    // JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " +
-    // e.getMessage());
-    // }
-    // }
+    JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " +
+    outputPath);
+    } catch (Exception e) {
+    JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " +
+    e.getMessage());
+    }
+    }
 
     private void showInputDialog(String action, Sampah sampah) {
         JTextField idSampahField = new JTextField();
@@ -156,10 +156,33 @@ public class SampahView extends JFrame {
 
         if (option == JOptionPane.OK_OPTION) {
             try {
+                // Validasi input data 
+                if (!idSampahField.getText().matches("\\d+")) {
+                    JOptionPane.showMessageDialog(this, "ID Sampah harus berupa angka!");
+                    return;
+                }
+    
+                if (!kategoriField.getText().matches("[a-zA-Z\\s]+$")) {
+                    JOptionPane.showMessageDialog(null, "Kategori sampah hanya boleh mengandung huruf dan spasi!");
+                    return;
+                }
+    
+                if (!jenisField.getText().matches("[a-zA-Z\\s]+$")) {
+                    JOptionPane.showMessageDialog(null, "Jenis sampah hanya boleh mengandung huruf dan spasi!");
+                    return;
+                }
+    
+                if (idTpsDropdown.getSelectedItem() == null) {
+                    JOptionPane.showMessageDialog(this, "Pilih ID TPS!");
+                    return;
+                }
+    
+                // Parsing data
                 int idSampah = Integer.parseInt(idSampahField.getText());
                 String kategori = kategoriField.getText();
                 String jenis = jenisField.getText();
                 int idTps = (Integer) idTpsDropdown.getSelectedItem();
+    
 
                 Sampah newSampah = new Sampah(idSampah, kategori, jenis, idTps);
 
@@ -177,6 +200,7 @@ public class SampahView extends JFrame {
             }
         }
     }
+
 
     private Sampah getSelectedSampah(int selectedRow) {
         return new Sampah(
