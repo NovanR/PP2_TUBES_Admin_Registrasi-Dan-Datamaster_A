@@ -25,6 +25,12 @@ public class MasyarakatView extends JFrame {
         initUI();
     }
 
+    private JTable getTable() {
+        // OTOMATIS REFRESH
+        JPanel mainPanel = (JPanel) getContentPane().getComponent(0);
+        JScrollPane scrollPane = (JScrollPane) mainPanel.getComponent(1);
+        return (JTable) scrollPane.getViewport().getView();
+    }
     private void initUI() {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
@@ -160,6 +166,8 @@ public class MasyarakatView extends JFrame {
             controller.addMasyarakat(masyarakat);
             JOptionPane.showMessageDialog(null, "Data berhasil ditambahkan!");
         }
+
+        refreshTable(getTable());
     }
 
     // UPDATE

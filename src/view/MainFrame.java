@@ -82,14 +82,16 @@ public class MainFrame extends JFrame {
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(2, 1, 10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        JButton masyarakatButton = new JButton("Masyarakat");
-        JButton kurirButton = new JButton("Kurir");
+        JButton masyarakatButton = createButton("Masyarakat");
+        JButton kurirButton = createButton("Kurir");
 
         panel.add(masyarakatButton);
         panel.add(kurirButton);
 
         masyarakatButton.addActionListener(e -> {
+            this.dispose();
             pendaftaranFrame.dispose();
             SwingUtilities.invokeLater(() -> {
                 MasyarakatView masyarakatView = new MasyarakatView();
@@ -108,8 +110,8 @@ public class MainFrame extends JFrame {
     private void showKurir(JFrame pendaftaranFrame, JPanel panel) {
         panel.removeAll();
 
-        JButton persetujuanButton = new JButton("Persetujuan");
-        JButton verifikasiButton = new JButton("Verifikasi");
+        JButton persetujuanButton = createButton("Persetujuan");
+        JButton verifikasiButton = createButton("Verifikasi");
 
         panel.add(persetujuanButton);
         panel.add(verifikasiButton);
@@ -127,6 +129,7 @@ public class MainFrame extends JFrame {
         });
 
         verifikasiButton.addActionListener(evt -> {
+            this.dispose();
             pendaftaranFrame.dispose();
             SwingUtilities.invokeLater(() -> {
                 BerkasView berkasView = new BerkasView();
