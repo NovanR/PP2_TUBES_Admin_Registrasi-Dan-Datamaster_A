@@ -6,13 +6,19 @@ import model.Poin;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+import java.io.FileOutputStream;
+import java.awt.Font;
 
 public class KonversiPoin extends JFrame {
+
     private KonversiPoinController controller;
     private JTable table;
     private Object[][] data;
-    private final String[] columnNames = { "ID Poin", "ID Pengguna", "ID TPS", "Kategori Sampah", "Berat (Kg)",
-            "Total Poin" };
+    private final String[] columnNames = {"ID Poin", "ID Pengguna", "ID TPS", "Kategori Sampah", "Berat (Kg)",
+        "Total Poin"};
 
     public KonversiPoin() {
         controller = new KonversiPoinController();
@@ -49,7 +55,10 @@ public class KonversiPoin extends JFrame {
 
         JButton refreshButton = new JButton("Refresh");
         refreshButton.addActionListener(e -> refreshTable());
-
+        
+        JButton exportPdfButton = new JButton("Export PDF");
+        exportPdfButton.addActionListener(e -> exportToPdf());
+        
         JButton kembaliButton = new JButton("Kembali");
         kembaliButton.addActionListener(e -> kembaliKeMainFrame());
 
@@ -58,6 +67,7 @@ public class KonversiPoin extends JFrame {
         footerPanel.add(editButton);
         footerPanel.add(deleteButton);
         footerPanel.add(refreshButton);
+        footerPanel.add(exportPdfButton);
         footerPanel.add(kembaliButton);
 
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
@@ -345,6 +355,57 @@ public class KonversiPoin extends JFrame {
             controller.deletePoin(idPoin);
             JOptionPane.showMessageDialog(this, "Data berhasil dihapus!");
             refreshTable(); // Segarkan tabel
+        }
+    }
+
+    // PDF REPORT
+    // PDF REPORT
+    private void exportToPdf() {
+        List<Poin> poinList = controller.getAllPoin();
+        if (poinList.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Tidak ada data untuk diekspor!");
+            return;
+        }
+
+        try {
+            Document document = new Document(PageSize.A4);
+            String outputPath = System.getProperty("user.dir") + "/data_konversi_poin.pdf";
+            PdfWriter.getInstance(document, new FileOutputStream(outputPath));
+
+            document.open();
+            document.add(new Paragraph("Laporan Data Konversi Poin Masyarakat", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
+            document.add(new Paragraph(" "));
+
+            PdfPTable table = new PdfPTable(6); // Enam kolom
+            table.setWidthPercentage(100);
+            table.setSpacingBefore(10f);
+            table.setSpacingAfter(10f);
+            table.setWidths(new float[]{1f, 2f, 2f, 2f, 2f, 2f});
+
+            // Header tabel
+            table.addCell("ID Poin");
+            table.addCell("ID Pengguna");
+            table.addCell("ID TPS");
+            table.addCell("Kategori Sampah");
+            table.addCell("Berat (Kg)");
+            table.addCell("Total Poin");
+
+            // Isi tabel
+            for (Poin poin : poinList) {
+                table.addCell(String.valueOf(poin.getIdPoin()));
+                table.addCell(String.valueOf(poin.getIdMasyarakat()));
+                table.addCell(String.valueOf(poin.getIdTps()));
+                table.addCell(String.valueOf(poin.getIdSampah()));
+                table.addCell(String.valueOf(poin.getBerat()));
+                table.addCell(String.valueOf(poin.getPoin()));
+            }
+
+            document.add(table);
+            document.close();
+
+            JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " + outputPath);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " + e.getMessage());
         }
     }
 

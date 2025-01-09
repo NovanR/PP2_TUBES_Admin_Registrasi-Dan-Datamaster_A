@@ -6,8 +6,14 @@ import model.Masyarakat;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+import java.io.FileOutputStream;
+import java.awt.Font;
 
 public class MasyarakatView extends JFrame {
+
     private MasyarakatController controller;
 
     public MasyarakatView() {
@@ -25,7 +31,6 @@ public class MasyarakatView extends JFrame {
         JScrollPane scrollPane = (JScrollPane) mainPanel.getComponent(1);
         return (JTable) scrollPane.getViewport().getView();
     }
-
     private void initUI() {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
@@ -35,7 +40,7 @@ public class MasyarakatView extends JFrame {
         mainPanel.add(headerLabel, BorderLayout.NORTH);
 
         // Table
-        String[] columnNames = { "ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "Status" };
+        String[] columnNames = {"ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "Status"};
         List<Masyarakat> masyarakatList = controller.getAllMasyarakat();
         Object[][] data = new Object[masyarakatList.size()][8];
 
@@ -65,6 +70,9 @@ public class MasyarakatView extends JFrame {
         JButton deleteButton = new JButton("Hapus");
         deleteButton.addActionListener(e -> deleteMasyarakat(table));
 
+        JButton exportPdfButton = new JButton("Export PDF");
+        exportPdfButton.addActionListener(e -> exportToPdf());
+
         JButton kembaliButton = new JButton("Kembali");
         kembaliButton.addActionListener(e -> kembaliKeMainFrame());
 
@@ -72,6 +80,7 @@ public class MasyarakatView extends JFrame {
         footerPanel.add(addButton);
         footerPanel.add(updateButton);
         footerPanel.add(deleteButton);
+        footerPanel.add(exportPdfButton);
         // footerPanel.add(refreshButton);
         footerPanel.add(kembaliButton);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
@@ -101,13 +110,13 @@ public class MasyarakatView extends JFrame {
         statusGroup.add(tolakButton);
 
         Object[] message = {
-                "Nama:", namaField,
-                "Jenis Kelamin:", lakiButton, perempuanButton,
-                "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
-                "No HP:", noHPField,
-                "Alamat:", alamatField,
-                "Image Path:", imageField,
-                "Status:", terimaButton, tolakButton
+            "Nama:", namaField,
+            "Jenis Kelamin:", lakiButton, perempuanButton,
+            "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
+            "No HP:", noHPField,
+            "Alamat:", alamatField,
+            "Image Path:", imageField,
+            "Status:", terimaButton, tolakButton
         };
 
         int option = JOptionPane.showConfirmDialog(null, message, "Add Masyarakat", JOptionPane.OK_CANCEL_OPTION);
@@ -203,13 +212,13 @@ public class MasyarakatView extends JFrame {
         }
 
         Object[] message = {
-                "Nama:", namaField,
-                "Jenis Kelamin:", lakiButton, perempuanButton,
-                "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
-                "No HP:", noHPField,
-                "Alamat:", alamatField,
-                "Image Path:", imageField,
-                "Status:", terimaButton, tolakButton
+            "Nama:", namaField,
+            "Jenis Kelamin:", lakiButton, perempuanButton,
+            "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
+            "No HP:", noHPField,
+            "Alamat:", alamatField,
+            "Image Path:", imageField,
+            "Status:", terimaButton, tolakButton
         };
 
         int option = JOptionPane.showConfirmDialog(null, message, "Update Masyarakat", JOptionPane.OK_CANCEL_OPTION);
@@ -281,8 +290,8 @@ public class MasyarakatView extends JFrame {
             data[i][7] = masyarakat.getStatus();
         }
 
-        table.setModel(new javax.swing.table.DefaultTableModel(data, new String[] {
-                "ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "Status"
+        table.setModel(new javax.swing.table.DefaultTableModel(data, new String[]{
+            "ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "Status"
         }));
     }
 
@@ -301,6 +310,61 @@ public class MasyarakatView extends JFrame {
             controller.deleteMasyarakat(id);
             JOptionPane.showMessageDialog(null, "Data berhasil dihapus!");
             refreshTable(table);
+        }
+    }
+
+    // PDF REPORT
+    private void exportToPdf() {
+        List<Masyarakat> masyarakatList = controller.getAllMasyarakat();
+        if (masyarakatList.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Tidak ada data untuk diekspor!");
+            return;
+        }
+
+        try {
+            Document document = new Document(PageSize.A4);
+            String outputPath = System.getProperty("user.dir") + "/data_masyarakat.pdf";
+            PdfWriter.getInstance(document, new FileOutputStream(outputPath));
+
+            document.open();
+            document.add(new Paragraph("Laporan Data Masyarakat",
+                    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
+            document.add(new Paragraph(" "));
+
+            PdfPTable table = new PdfPTable(8); // Delapan kolom
+            table.setWidthPercentage(100);
+            table.setSpacingBefore(10f);
+            table.setSpacingAfter(10f);
+            table.setWidths(new float[]{1f, 2f, 1.5f, 1.5f, 2f, 3f, 2f, 1.5f});
+
+            // Header tabel
+            table.addCell("ID");
+            table.addCell("Nama");
+            table.addCell("Jenis Kelamin");
+            table.addCell("Tanggal Lahir");
+            table.addCell("No HP");
+            table.addCell("Alamat");
+            table.addCell("Image");
+            table.addCell("Status");
+
+            // Isi tabel
+            for (Masyarakat masyarakat : masyarakatList) {
+                table.addCell(String.valueOf(masyarakat.getIdMasyarakat()));
+                table.addCell(masyarakat.getNamaMasyarakat());
+                table.addCell(masyarakat.getJenisKelamin());
+                table.addCell(masyarakat.getTanggalLahir().toString());
+                table.addCell(masyarakat.getNoHP());
+                table.addCell(masyarakat.getAlamat());
+                table.addCell(masyarakat.getImage());
+                table.addCell(masyarakat.getStatus());
+            }
+
+            document.add(table);
+            document.close();
+
+            JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " + outputPath);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " + e.getMessage());
         }
     }
 
