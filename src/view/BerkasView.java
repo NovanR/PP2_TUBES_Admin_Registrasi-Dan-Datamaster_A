@@ -2,13 +2,9 @@ package view;
 
 import controller.BerkasController;
 import model.BerkasKurir;
-import model.MyBatisUtil;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
-import org.apache.ibatis.session.SqlSession;
-
 import java.awt.*;
 import java.util.List;
 
@@ -69,49 +65,36 @@ public class BerkasView extends JFrame {
     }
 
     private void showInputDialog(String action, BerkasKurir berkas) {
-        JTextField idBerkasField = new JTextField();
         JComboBox<Integer> idKurirComboBox = new JComboBox<>();
         JTextField idKtpField = new JTextField();
         JTextField idSimField = new JTextField();
-        JRadioButton aktifRadioButton = new JRadioButton("Aktif");
-        JRadioButton nonAktifRadioButton = new JRadioButton("Non-Aktif");
-        ButtonGroup statusButtonGroup = new ButtonGroup();
-        statusButtonGroup.add(aktifRadioButton);
-        statusButtonGroup.add(nonAktifRadioButton);
+        JComboBox<String> statusComboBox = new JComboBox<>(new String[] { "Aktif", "Non-Aktif" });
 
         // Load ID Kurir ke ComboBox
         loadKurirData(idKurirComboBox);
 
-        // isi field dengan data yang dipilih
+        // Isi field dengan data yang dipilih
         if (berkas != null) {
-            idBerkasField.setText(String.valueOf(berkas.getIdBerkas()));
             idKurirComboBox.setSelectedItem(berkas.getIdKurir());
             idKtpField.setText(berkas.getIdKtp());
             idSimField.setText(berkas.getIdSim());
-            if ("Aktif".equals(berkas.getStatus())) {
-                aktifRadioButton.setSelected(true);
-            } else {
-                nonAktifRadioButton.setSelected(true);
-            }
+            statusComboBox.setSelectedItem(berkas.getStatus());
         }
 
         // Panel untuk input form
         JPanel inputPanel = new JPanel(new GridLayout(5, 2, 5, 5));
-        inputPanel.add(new JLabel("ID Berkas:"));
-        inputPanel.add(idBerkasField);
         inputPanel.add(new JLabel("ID Kurir:"));
         inputPanel.add(idKurirComboBox);
         inputPanel.add(new JLabel("ID KTP:"));
         inputPanel.add(idKtpField);
         inputPanel.add(new JLabel("ID SIM:"));
         inputPanel.add(idSimField);
-        inputPanel.add(new JLabel("Status:"));
-        JPanel statusPanel = new JPanel();
-        statusPanel.add(aktifRadioButton);
-        statusPanel.add(nonAktifRadioButton);
-        inputPanel.add(statusPanel);
 
-        // Tampil dialog
+        if ("Update".equals(action)) { // input status hanya untuk Update
+            inputPanel.add(new JLabel("Status:"));
+            inputPanel.add(statusComboBox);
+        }
+
         int option = JOptionPane.showConfirmDialog(
                 this,
                 inputPanel,
@@ -119,23 +102,35 @@ public class BerkasView extends JFrame {
                 JOptionPane.OK_CANCEL_OPTION);
 
         if (option == JOptionPane.OK_OPTION) {
-            String status = aktifRadioButton.isSelected() ? "Aktif" : "Non-Aktif";
-            BerkasKurir newBerkas = new BerkasKurir(
-                    berkas == null ? 0 : Integer.parseInt(idBerkasField.getText()),
-                    idKtpField.getText(),
-                    idSimField.getText(),
-                    status,
-                    (Integer) idKurirComboBox.getSelectedItem());
+            try {
+                // Validasi data menggunakan controller
+                controller.validateBerkasData(idKtpField.getText(), idSimField.getText());
 
-            if ("Tambah".equals(action)) {
-                controller.insertBerkas(newBerkas);
-                JOptionPane.showMessageDialog(this, "Berkas berhasil ditambahkan.");
-            } else if ("Update".equals(action)) {
-                controller.updateBerkas(newBerkas);
-                JOptionPane.showMessageDialog(this, "Berkas berhasil diperbarui.");
+                String status = "Pending"; // Default
+                if ("Update".equals(action)) {
+                    status = (String) statusComboBox.getSelectedItem();
+                }
+
+                BerkasKurir newBerkas = new BerkasKurir(
+                        0, // ID Berkas otomatis
+                        idKtpField.getText(),
+                        idSimField.getText(),
+                        status,
+                        (Integer) idKurirComboBox.getSelectedItem());
+
+                if ("Tambah".equals(action)) {
+                    controller.insertBerkas(newBerkas);
+                    JOptionPane.showMessageDialog(this, "Berkas berhasil ditambahkan");
+                } else if ("Update".equals(action)) {
+                    newBerkas.setIdBerkas(berkas.getIdBerkas());
+                    controller.updateBerkas(newBerkas);
+                    JOptionPane.showMessageDialog(this, "Berkas berhasil diperbarui.");
+                }
+
+                loadData();
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
-
-            loadData();
         }
     }
 
@@ -162,13 +157,13 @@ public class BerkasView extends JFrame {
 
     private void loadKurirData(JComboBox<Integer> comboBox) {
         comboBox.removeAllItems();
-        try (SqlSession session = MyBatisUtil.getSqlSessionFactory().openSession()) {
-            List<Integer> kurirIds = session.selectList("getKurirIds");
+        try {
+            List<Integer> kurirIds = controller.getKurirIds();
             for (Integer id : kurirIds) {
                 comboBox.addItem(id);
             }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Gagal memuat data kurir: " + ex.getMessage());
+        } catch (RuntimeException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
