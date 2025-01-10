@@ -17,13 +17,13 @@ public class KonversiPoin extends JFrame {
     private KonversiPoinController controller;
     private JTable table;
     private Object[][] data;
-    private final String[] columnNames = {"ID Poin", "ID Pengguna", "ID TPS", "Kategori Sampah", "Berat (Kg)",
-        "Total Poin"};
+    private final String[] columnNames = { "ID Poin", "ID Pengguna", "ID TPS", "Kategori Sampah", "Berat (Kg)",
+            "Total Poin" };
 
     public KonversiPoin() {
         controller = new KonversiPoinController();
         setTitle("Data Poin Masyarakat");
-        setSize(800, 600);
+        setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         initUI();
@@ -53,12 +53,9 @@ public class KonversiPoin extends JFrame {
         JButton deleteButton = new JButton("Hapus Data");
         deleteButton.addActionListener(e -> deleteSelectedRow());
 
-        JButton refreshButton = new JButton("Refresh");
-        refreshButton.addActionListener(e -> refreshTable());
-        
         JButton exportPdfButton = new JButton("Export PDF");
         exportPdfButton.addActionListener(e -> exportToPdf());
-        
+
         JButton kembaliButton = new JButton("Kembali");
         kembaliButton.addActionListener(e -> kembaliKeMainFrame());
 
@@ -66,7 +63,6 @@ public class KonversiPoin extends JFrame {
         footerPanel.add(addButton);
         footerPanel.add(editButton);
         footerPanel.add(deleteButton);
-        footerPanel.add(refreshButton);
         footerPanel.add(exportPdfButton);
         footerPanel.add(kembaliButton);
 
@@ -158,11 +154,11 @@ public class KonversiPoin extends JFrame {
 
         // Tombol
         JPanel buttonPanel = new JPanel();
-        JButton cancelButton = new JButton("Batal");
         JButton saveButton = new JButton("Simpan");
+        JButton cancelButton = new JButton("Batal");
 
-        buttonPanel.add(cancelButton);
         buttonPanel.add(saveButton);
+        buttonPanel.add(cancelButton);
 
         dialog.add(buttonPanel, BorderLayout.SOUTH);
 
@@ -291,12 +287,11 @@ public class KonversiPoin extends JFrame {
         JButton cancelButton = new JButton("Batal");
         JButton saveButton = new JButton("Simpan");
 
-        buttonPanel.add(cancelButton);
         buttonPanel.add(saveButton);
+        buttonPanel.add(cancelButton);
 
         dialog.add(buttonPanel, BorderLayout.SOUTH);
 
-        cancelButton.addActionListener(e -> dialog.dispose());
         saveButton.addActionListener(e -> {
             try {
                 int idTps = (Integer) idTpsCombo.getSelectedItem();
@@ -333,6 +328,7 @@ public class KonversiPoin extends JFrame {
                         JOptionPane.ERROR_MESSAGE);
             }
         });
+        cancelButton.addActionListener(e -> dialog.dispose());
 
         dialog.setSize(400, 300);
         dialog.setLocationRelativeTo(this);
@@ -359,7 +355,6 @@ public class KonversiPoin extends JFrame {
     }
 
     // PDF REPORT
-    // PDF REPORT
     private void exportToPdf() {
         List<Poin> poinList = controller.getAllPoin();
         if (poinList.isEmpty()) {
@@ -369,18 +364,20 @@ public class KonversiPoin extends JFrame {
 
         try {
             Document document = new Document(PageSize.A4);
-            String outputPath = System.getProperty("user.dir") + "/data_konversi_poin.pdf";
+            String outputPath = System.getProperty("user.dir") +
+                    "/data_konversi_poin.pdf";
             PdfWriter.getInstance(document, new FileOutputStream(outputPath));
 
             document.open();
-            document.add(new Paragraph("Laporan Data Konversi Poin Masyarakat", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
+            document.add(new Paragraph("Laporan Data Konversi Poin Masyarakat",
+                    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
             document.add(new Paragraph(" "));
 
             PdfPTable table = new PdfPTable(6); // Enam kolom
             table.setWidthPercentage(100);
             table.setSpacingBefore(10f);
             table.setSpacingAfter(10f);
-            table.setWidths(new float[]{1f, 2f, 2f, 2f, 2f, 2f});
+            table.setWidths(new float[] { 1f, 2f, 2f, 2f, 2f, 2f });
 
             // Header tabel
             table.addCell("ID Poin");
@@ -403,9 +400,11 @@ public class KonversiPoin extends JFrame {
             document.add(table);
             document.close();
 
-            JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " + outputPath);
+            JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " +
+                    outputPath);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " +
+                    e.getMessage());
         }
     }
 

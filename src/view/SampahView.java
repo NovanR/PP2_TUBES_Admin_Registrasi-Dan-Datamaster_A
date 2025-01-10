@@ -15,7 +15,7 @@ import java.util.List;
 public class SampahView extends JFrame {
 
     private JTable sampahTable;
-    private JButton addButton, updateButton, deleteButton, loadButton, kembaliButton, exportPdfButton;
+    private JButton addButton, updateButton, deleteButton, kembaliButton, exportPdfButton;
     private SampahController controller;
 
     public SampahView() {
@@ -23,7 +23,7 @@ public class SampahView extends JFrame {
 
         setTitle("Manajemen Sampah");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(600, 400);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
@@ -34,9 +34,9 @@ public class SampahView extends JFrame {
         // Button Panel
         JPanel buttonPanel = new JPanel();
         addButton = new JButton("Tambah");
-        updateButton = new JButton("Update");
+        updateButton = new JButton("Edit");
         deleteButton = new JButton("Hapus");
-        loadButton = new JButton("Refresh");
+
         exportPdfButton = new JButton("Export PDF");
         kembaliButton = new JButton("Kembali");
         kembaliButton.addActionListener(e -> kembaliKeMainFrame());
@@ -44,7 +44,7 @@ public class SampahView extends JFrame {
         buttonPanel.add(addButton);
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
-        buttonPanel.add(loadButton);
+
         buttonPanel.add(exportPdfButton);
         buttonPanel.add(kembaliButton);
 
@@ -54,15 +54,15 @@ public class SampahView extends JFrame {
         addButton.addActionListener(e -> showInputDialog("Tambah", null));
         updateButton.addActionListener(e -> {
             int selectedRow = sampahTable.getSelectedRow();
+            UIManager.put("OptionPane.okButtonText", "OK");
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(this, "Pilih baris untuk diupdate!");
                 return;
             }
             Sampah selectedSampah = getSelectedSampah(selectedRow);
-            showInputDialog("Update", selectedSampah);
+            showInputDialog("Edit", selectedSampah);
         });
         deleteButton.addActionListener(e -> deleteSampah());
-        loadButton.addActionListener(e -> loadData());
         exportPdfButton.addActionListener(e -> exportToPdf());
 
         // Load data saat aplikasi dimulai
@@ -92,7 +92,7 @@ public class SampahView extends JFrame {
             table.setWidthPercentage(100);
             table.setSpacingBefore(10f);
             table.setSpacingAfter(10f);
-            table.setWidths(new float[]{1f, 2f, 2f, 1f});
+            table.setWidths(new float[] { 1f, 2f, 2f, 1f });
 
             // Header tabel
             table.addCell("ID Sampah");
@@ -148,6 +148,7 @@ public class SampahView extends JFrame {
         inputPanel.add(idTpsDropdown);
 
         // Tampil dialog
+        UIManager.put("OptionPane.okButtonText", "Simpan");
         int option = JOptionPane.showConfirmDialog(
                 this,
                 inputPanel,
@@ -156,7 +157,7 @@ public class SampahView extends JFrame {
 
         if (option == JOptionPane.OK_OPTION) {
             try {
-                // Validasi input data 
+                // Validasi input data
                 if (!idSampahField.getText().matches("\\d+")) {
                     JOptionPane.showMessageDialog(this, "ID Sampah harus berupa angka!");
                     return;
@@ -222,14 +223,14 @@ public class SampahView extends JFrame {
 
     private void loadData() {
         DefaultTableModel model = new DefaultTableModel(
-                new String[]{"ID Sampah", "Kategori Sampah", "Jenis Sampah", "ID TPS"}, 0);
+                new String[] { "ID Sampah", "Kategori Sampah", "Jenis Sampah", "ID TPS" }, 0);
         List<Sampah> sampahList = controller.getAllSampah();
         for (Sampah sampah : sampahList) {
-            model.addRow(new Object[]{
-                sampah.getIdSampah(),
-                sampah.getKategoriSampah(),
-                sampah.getJenisSampah(),
-                sampah.getIdTps()
+            model.addRow(new Object[] {
+                    sampah.getIdSampah(),
+                    sampah.getKategoriSampah(),
+                    sampah.getJenisSampah(),
+                    sampah.getIdTps()
             });
         }
         sampahTable.setModel(model);
