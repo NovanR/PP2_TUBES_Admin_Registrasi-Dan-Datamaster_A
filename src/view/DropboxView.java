@@ -34,7 +34,7 @@ public class DropboxView extends JFrame {
         mainPanel.add(headerLabel, BorderLayout.NORTH);
 
         // Table
-        String[] columnNames = {"ID", "Nama", "No HP", "Alamat"};
+        String[] columnNames = { "ID", "Nama", "No HP", "Alamat" };
         JTable table = new JTable();
         refreshTable(table);
         JScrollPane scrollPane = new JScrollPane(table);
@@ -61,8 +61,6 @@ public class DropboxView extends JFrame {
 
         JButton exportPdfButton = new JButton("Ekspor PDF");
         exportPdfButton.addActionListener(e -> exportToPdf());
-        // JButton refreshButton = new JButton("Refresh");
-        // refreshButton.addActionListener(e -> refreshTable(table));
 
         JButton kembaliButton = new JButton("Kembali");
         kembaliButton.addActionListener(e -> kembaliKeMainFrame());
@@ -87,10 +85,11 @@ public class DropboxView extends JFrame {
         JTextField alamatField = new JTextField();
 
         Object[] message = {
-            "Nama:", namaField,
-            "No HP:", noHPField,
-            "Alamat:", alamatField,};
+                "Nama:", namaField,
+                "No HP:", noHPField,
+                "Alamat:", alamatField, };
 
+        UIManager.put("OptionPane.okButtonText", "Simpan");
         int option = JOptionPane.showConfirmDialog(null, message, "Add Dropbox", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             // Validasi Nama
@@ -122,6 +121,7 @@ public class DropboxView extends JFrame {
     // UPDATE DROPBOX
     private void updateDropbox(JTable table) {
         int selectedRow = table.getSelectedRow();
+        UIManager.put("OptionPane.okButtonText", "OK");
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(null, "Pilih baris yang akan diupdate.");
             return;
@@ -133,10 +133,11 @@ public class DropboxView extends JFrame {
         JTextField alamatField = new JTextField((String) table.getValueAt(selectedRow, 3));
 
         Object[] message = {
-            "Nama:", namaField,
-            "No HP:", noHPField,
-            "Alamat:", alamatField,};
+                "Nama:", namaField,
+                "No HP:", noHPField,
+                "Alamat:", alamatField, };
 
+        UIManager.put("OptionPane.okButtonText", "Simpan");
         int option = JOptionPane.showConfirmDialog(null, message, "Update Dropbox", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
 
@@ -183,8 +184,8 @@ public class DropboxView extends JFrame {
                 data[i][3] = dropbox.getAlamatTps();
             }
 
-            table.setModel(new javax.swing.table.DefaultTableModel(data, new String[]{
-                "ID", "Nama", "No HP", "Alamat"
+            table.setModel(new javax.swing.table.DefaultTableModel(data, new String[] {
+                    "ID", "Nama", "No HP", "Alamat"
             }));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Gagal memuat data: " + e.getMessage());
@@ -226,14 +227,15 @@ public class DropboxView extends JFrame {
             PdfWriter.getInstance(document, new FileOutputStream(outputPath));
 
             document.open();
-            document.add(new Paragraph("Laporan Data Dropbox", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
+            document.add(new Paragraph("Laporan Data Dropbox",
+                    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
             document.add(new Paragraph(" "));
 
             PdfPTable table = new PdfPTable(4); // Empat kolom
             table.setWidthPercentage(100);
             table.setSpacingBefore(10f);
             table.setSpacingAfter(10f);
-            table.setWidths(new float[]{1f, 2f, 2f, 2f});
+            table.setWidths(new float[] { 1f, 2f, 2f, 2f });
 
             // Header tabel
             table.addCell("ID");
@@ -252,9 +254,11 @@ public class DropboxView extends JFrame {
             document.add(table);
             document.close();
 
-            JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " + outputPath);
+            JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " +
+                    outputPath);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " +
+                    e.getMessage());
         }
     }
 
