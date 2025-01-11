@@ -74,6 +74,7 @@ public class BerkasView extends JFrame {
         };
 
         UIManager.put("OptionPane.okButtonText", "Simpan");
+        UIManager.put("OptionPane.cancelButtonText", "Batal");
         int option = JOptionPane.showConfirmDialog(
                 this,
                 inputFields,
@@ -126,6 +127,7 @@ public class BerkasView extends JFrame {
         };
 
         UIManager.put("OptionPane.okButtonText", "Simpan");
+        UIManager.put("OptionPane.cancelButtonText", "Batal");
         int option = JOptionPane.showConfirmDialog(
                 this,
                 inputFields,

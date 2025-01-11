@@ -90,6 +90,7 @@ public class DropboxView extends JFrame {
                 "Alamat:", alamatField, };
 
         UIManager.put("OptionPane.okButtonText", "Simpan");
+        UIManager.put("OptionPane.cancelButtonText", "Batal");
         int option = JOptionPane.showConfirmDialog(null, message, "Add Dropbox", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             // Validasi Nama
@@ -138,6 +139,8 @@ public class DropboxView extends JFrame {
                 "Alamat:", alamatField, };
 
         UIManager.put("OptionPane.okButtonText", "Simpan");
+        UIManager.put("OptionPane.cancelButtonText", "Batal");
+
         int option = JOptionPane.showConfirmDialog(null, message, "Update Dropbox", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
 
@@ -185,7 +188,7 @@ public class DropboxView extends JFrame {
             }
 
             table.setModel(new javax.swing.table.DefaultTableModel(data, new String[] {
-                    "ID", "Nama", "No HP", "Alamat"
+                    "ID", "Nama TPS", "No HP TPS", "Alamat TPS"
             }));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Gagal memuat data: " + e.getMessage());
@@ -239,9 +242,9 @@ public class DropboxView extends JFrame {
 
             // Header tabel
             table.addCell("ID");
-            table.addCell("Nama");
-            table.addCell("No HP");
-            table.addCell("Alamat");
+            table.addCell("Nama TPS");
+            table.addCell("No HP TPS");
+            table.addCell("Alamat TPS");
 
             // Isi tabel
             for (Dropbox dropbox : dropboxList) {
