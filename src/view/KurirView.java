@@ -19,7 +19,7 @@ public class KurirView extends JFrame {
     public KurirView() {
         controller = new KurirController();
         setTitle("Data Kurir");
-        setSize(600, 400);
+        setSize(800, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         initUI();
@@ -41,7 +41,7 @@ public class KurirView extends JFrame {
         mainPanel.add(headerLabel, BorderLayout.NORTH);
 
         // Table
-        String[] columnNames = {"ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "status"};
+        String[] columnNames = { "ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "status" };
         List<Kurir> kurirList = controller.getAllKurir();
         Object[][] data = new Object[kurirList.size()][8];
 
@@ -109,15 +109,16 @@ public class KurirView extends JFrame {
         statusGroup.add(tolakButton);
 
         Object[] message = {
-            "Nama:", namaField,
-            "Jenis Kelamin:", lakiButton, perempuanButton,
-            "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
-            "No HP:", noHPField,
-            "Alamat:", alamatField,
-            "Image Path:", imageField,
-            "Status:", terimaButton, tolakButton
+                "Nama:", namaField,
+                "Jenis Kelamin:", lakiButton, perempuanButton,
+                "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
+                "No HP:", noHPField,
+                "Alamat:", alamatField,
+                "Image Path:", imageField,
+                "Status:", terimaButton, tolakButton
         };
 
+        UIManager.put("OptionPane.okButtonText", "Simpan");
         int option = JOptionPane.showConfirmDialog(null, message, "Add Kurir", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             String jenisKelamin = lakiButton.isSelected() ? "Laki-laki"
@@ -166,6 +167,7 @@ public class KurirView extends JFrame {
 
     // UPDATE
     private void updateKurir(JTable table) {
+        UIManager.put("OptionPane.okButtonText", "OK");
         int selectedRow = table.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(null, "Pilih baris yang akan diupdate.");
@@ -206,15 +208,16 @@ public class KurirView extends JFrame {
         }
 
         Object[] message = {
-            "Nama:", namaField,
-            "Jenis Kelamin:", lakiButton, perempuanButton,
-            "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
-            "No HP:", noHPField,
-            "Alamat:", alamatField,
-            "Image Path:", imageField,
-            "Status:", terimaButton, tolakButton
+                "Nama:", namaField,
+                "Jenis Kelamin:", lakiButton, perempuanButton,
+                "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
+                "No HP:", noHPField,
+                "Alamat:", alamatField,
+                "Image Path:", imageField,
+                "Status:", terimaButton, tolakButton
         };
 
+        UIManager.put("OptionPane.okButtonText", "Simpan");
         int option = JOptionPane.showConfirmDialog(null, message, "Update Kurir", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             String newJenisKelamin = lakiButton.isSelected() ? "Laki-laki"
@@ -279,8 +282,8 @@ public class KurirView extends JFrame {
             data[i][7] = kurir.getStatus();
         }
 
-        table.setModel(new javax.swing.table.DefaultTableModel(data, new String[]{
-            "ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "Status"
+        table.setModel(new javax.swing.table.DefaultTableModel(data, new String[] {
+                "ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "Status"
         }));
     }
 
@@ -316,14 +319,15 @@ public class KurirView extends JFrame {
             PdfWriter.getInstance(document, new FileOutputStream(outputPath));
 
             document.open();
-            document.add(new Paragraph("Laporan Data Kurir", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
+            document.add(new Paragraph("Laporan Data Kurir",
+                    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
             document.add(new Paragraph(" "));
 
             PdfPTable table = new PdfPTable(8); // Delapan kolom
             table.setWidthPercentage(100);
             table.setSpacingBefore(10f);
             table.setSpacingAfter(10f);
-            table.setWidths(new float[]{1f, 2f, 1.5f, 2f, 2f, 2f, 2f, 1f});
+            table.setWidths(new float[] { 1f, 2f, 1.5f, 2f, 2f, 2f, 2f, 1f });
 
             // Header tabel
             table.addCell("ID");
@@ -350,9 +354,11 @@ public class KurirView extends JFrame {
             document.add(table);
             document.close();
 
-            JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " + outputPath);
+            JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " +
+                    outputPath);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " +
+                    e.getMessage());
         }
     }
 
