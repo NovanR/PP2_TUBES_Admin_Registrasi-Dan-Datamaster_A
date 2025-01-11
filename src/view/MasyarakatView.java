@@ -19,7 +19,7 @@ public class MasyarakatView extends JFrame {
     public MasyarakatView() {
         controller = new MasyarakatController();
         setTitle("Data Masyarakat");
-        setSize(600, 400);
+        setSize(800, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         initUI();
@@ -31,6 +31,7 @@ public class MasyarakatView extends JFrame {
         JScrollPane scrollPane = (JScrollPane) mainPanel.getComponent(1);
         return (JTable) scrollPane.getViewport().getView();
     }
+
     private void initUI() {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
@@ -40,7 +41,7 @@ public class MasyarakatView extends JFrame {
         mainPanel.add(headerLabel, BorderLayout.NORTH);
 
         // Table
-        String[] columnNames = {"ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "Status"};
+        String[] columnNames = { "ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "Status" };
         List<Masyarakat> masyarakatList = controller.getAllMasyarakat();
         Object[][] data = new Object[masyarakatList.size()][8];
 
@@ -81,7 +82,6 @@ public class MasyarakatView extends JFrame {
         footerPanel.add(updateButton);
         footerPanel.add(deleteButton);
         footerPanel.add(exportPdfButton);
-        // footerPanel.add(refreshButton);
         footerPanel.add(kembaliButton);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
@@ -90,7 +90,7 @@ public class MasyarakatView extends JFrame {
 
     // ADD MASYARAKAT
     private void addMasyarakat() {
-        // Dialog untuk menambah data baru
+        // menambah data baru
         JTextField namaField = new JTextField();
         JRadioButton lakiButton = new JRadioButton("Laki-laki");
         JRadioButton perempuanButton = new JRadioButton("Perempuan");
@@ -110,15 +110,16 @@ public class MasyarakatView extends JFrame {
         statusGroup.add(tolakButton);
 
         Object[] message = {
-            "Nama:", namaField,
-            "Jenis Kelamin:", lakiButton, perempuanButton,
-            "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
-            "No HP:", noHPField,
-            "Alamat:", alamatField,
-            "Image Path:", imageField,
-            "Status:", terimaButton, tolakButton
+                "Nama:", namaField,
+                "Jenis Kelamin:", lakiButton, perempuanButton,
+                "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
+                "No HP:", noHPField,
+                "Alamat:", alamatField,
+                "Image Path:", imageField,
+                "Status:", terimaButton, tolakButton
         };
 
+        UIManager.put("OptionPane.okButtonText", "Simpan");
         int option = JOptionPane.showConfirmDialog(null, message, "Add Masyarakat", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             String jenisKelamin = lakiButton.isSelected() ? "Laki-laki"
@@ -173,6 +174,7 @@ public class MasyarakatView extends JFrame {
     // UPDATE
     private void updateMasyarakat(JTable table) {
         int selectedRow = table.getSelectedRow();
+        UIManager.put("OptionPane.okButtonText", "OK");
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(null, "Pilih baris yang akan diupdate.");
             return;
@@ -212,15 +214,16 @@ public class MasyarakatView extends JFrame {
         }
 
         Object[] message = {
-            "Nama:", namaField,
-            "Jenis Kelamin:", lakiButton, perempuanButton,
-            "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
-            "No HP:", noHPField,
-            "Alamat:", alamatField,
-            "Image Path:", imageField,
-            "Status:", terimaButton, tolakButton
+                "Nama:", namaField,
+                "Jenis Kelamin:", lakiButton, perempuanButton,
+                "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
+                "No HP:", noHPField,
+                "Alamat:", alamatField,
+                "Image Path:", imageField,
+                "Status:", terimaButton, tolakButton
         };
 
+        UIManager.put("OptionPane.okButtonText", "Simpan");
         int option = JOptionPane.showConfirmDialog(null, message, "Update Masyarakat", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             String newJenisKelamin = lakiButton.isSelected() ? "Laki-laki"
@@ -290,8 +293,8 @@ public class MasyarakatView extends JFrame {
             data[i][7] = masyarakat.getStatus();
         }
 
-        table.setModel(new javax.swing.table.DefaultTableModel(data, new String[]{
-            "ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "Status"
+        table.setModel(new javax.swing.table.DefaultTableModel(data, new String[] {
+                "ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "Status"
         }));
     }
 
@@ -335,7 +338,7 @@ public class MasyarakatView extends JFrame {
             table.setWidthPercentage(100);
             table.setSpacingBefore(10f);
             table.setSpacingAfter(10f);
-            table.setWidths(new float[]{1f, 2f, 1.5f, 1.5f, 2f, 3f, 2f, 1.5f});
+            table.setWidths(new float[] { 1f, 2f, 1.5f, 1.5f, 2f, 3f, 2f, 1.5f });
 
             // Header tabel
             table.addCell("ID");
@@ -362,9 +365,11 @@ public class MasyarakatView extends JFrame {
             document.add(table);
             document.close();
 
-            JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " + outputPath);
+            JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " +
+                    outputPath);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " +
+                    e.getMessage());
         }
     }
 
