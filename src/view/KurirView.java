@@ -41,20 +41,24 @@ public class KurirView extends JFrame {
         mainPanel.add(headerLabel, BorderLayout.NORTH);
 
         // Table
-        String[] columnNames = { "ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "status" };
+        String[] columnNames = { "ID", "No Ktp", "No SIM", "NPWP", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP",
+                "Alamat", "Image", "status" };
         List<Kurir> kurirList = controller.getAllKurir();
-        Object[][] data = new Object[kurirList.size()][8];
+        Object[][] data = new Object[kurirList.size()][11];
 
         for (int i = 0; i < kurirList.size(); i++) {
             Kurir kurir = kurirList.get(i);
             data[i][0] = kurir.getIdKurir();
-            data[i][1] = kurir.getNamaKurir();
-            data[i][2] = kurir.getJenisKelamin();
-            data[i][3] = kurir.getTanggalLahir();
-            data[i][4] = kurir.getNoHP();
-            data[i][5] = kurir.getAlamat();
-            data[i][6] = kurir.getImage();
-            data[i][7] = kurir.getStatus();
+            data[i][1] = kurir.getNoKtp();
+            data[i][2] = kurir.getNoSim();
+            data[i][3] = kurir.getNpwp();
+            data[i][4] = kurir.getNamaKurir();
+            data[i][5] = kurir.getJenisKelamin();
+            data[i][6] = kurir.getTanggalLahir();
+            data[i][7] = kurir.getNoHP();
+            data[i][8] = kurir.getAlamat();
+            data[i][9] = kurir.getImage();
+            data[i][10] = kurir.getStatus();
         }
 
         JTable table = new JTable(data, columnNames);
@@ -90,6 +94,9 @@ public class KurirView extends JFrame {
 
     // ADD KURIR
     private void addKurir() {
+        JTextField noKtpField = new JTextField();
+        JTextField noSimField = new JTextField();
+        JTextField npwpField = new JTextField();
         JTextField namaField = new JTextField();
         JRadioButton lakiButton = new JRadioButton("Laki-laki");
         JRadioButton perempuanButton = new JRadioButton("Perempuan");
@@ -109,13 +116,15 @@ public class KurirView extends JFrame {
         statusGroup.add(tolakButton);
 
         Object[] message = {
+                "No KTP:", noKtpField,
+                "No SIM:", noSimField,
+                "NPWP:", npwpField,
                 "Nama:", namaField,
                 "Jenis Kelamin:", lakiButton, perempuanButton,
                 "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
                 "No HP:", noHPField,
                 "Alamat:", alamatField,
-                "Image Path:", imageField,
-                "Status:", terimaButton, tolakButton
+                "Image Path:", imageField
         };
 
         UIManager.put("OptionPane.okButtonText", "Simpan");
@@ -151,14 +160,17 @@ public class KurirView extends JFrame {
             }
 
             Kurir kurir = new Kurir(
-                    0, // ID akan digenerate oleh database
+                    0, // ID otomatis
+                    Integer.parseInt(noKtpField.getText()), // No KTP
+                    Integer.parseInt(noSimField.getText()), // No SIM
+                    Integer.parseInt(npwpField.getText()), // NPWP
                     namaField.getText(),
                     jenisKelamin,
                     java.sql.Date.valueOf(tanggalLahirField.getText()),
                     noHPField.getText(),
                     alamatField.getText(),
                     imageField.getText(),
-                    status);
+                    "PENDING");
             controller.addKurir(kurir);
             JOptionPane.showMessageDialog(null, "Data berhasil ditambahkan!");
         }
@@ -175,24 +187,27 @@ public class KurirView extends JFrame {
         }
 
         int id = (int) table.getValueAt(selectedRow, 0);
-        JTextField namaField = new JTextField((String) table.getValueAt(selectedRow, 1));
+        JTextField noKtpField = new JTextField(String.valueOf(table.getValueAt(selectedRow, 1)));
+        JTextField noSimField = new JTextField(String.valueOf(table.getValueAt(selectedRow, 2)));
+        JTextField npwpField = new JTextField(String.valueOf(table.getValueAt(selectedRow, 3)));
+        JTextField namaField = new JTextField((String) table.getValueAt(selectedRow, 4));
         JRadioButton lakiButton = new JRadioButton("Laki-laki");
         JRadioButton perempuanButton = new JRadioButton("Perempuan");
         ButtonGroup genderGroup = new ButtonGroup();
         genderGroup.add(lakiButton);
         genderGroup.add(perempuanButton);
 
-        String jenisKelamin = (String) table.getValueAt(selectedRow, 2);
+        String jenisKelamin = (String) table.getValueAt(selectedRow, 5);
         if ("Laki-laki".equals(jenisKelamin)) {
             lakiButton.setSelected(true);
         } else if ("Perempuan".equals(jenisKelamin)) {
             perempuanButton.setSelected(true);
         }
 
-        JTextField tanggalLahirField = new JTextField(table.getValueAt(selectedRow, 3).toString());
-        JTextField noHPField = new JTextField((String) table.getValueAt(selectedRow, 4));
-        JTextField alamatField = new JTextField((String) table.getValueAt(selectedRow, 5));
-        JTextField imageField = new JTextField((String) table.getValueAt(selectedRow, 6));
+        JTextField tanggalLahirField = new JTextField(table.getValueAt(selectedRow, 6).toString());
+        JTextField noHPField = new JTextField((String) table.getValueAt(selectedRow, 7));
+        JTextField alamatField = new JTextField((String) table.getValueAt(selectedRow, 8));
+        JTextField imageField = new JTextField((String) table.getValueAt(selectedRow, 9));
 
         JRadioButton terimaButton = new JRadioButton("DISETUJUI");
         JRadioButton tolakButton = new JRadioButton("DITOLAK");
@@ -200,7 +215,7 @@ public class KurirView extends JFrame {
         statusGroup.add(terimaButton);
         statusGroup.add(tolakButton);
 
-        String currentStatus = table.getValueAt(selectedRow, 7).toString();
+        String currentStatus = table.getValueAt(selectedRow, 10).toString();
         if ("DISETUJUI".equalsIgnoreCase(currentStatus)) {
             terimaButton.setSelected(true);
         } else if ("DITOLAK".equalsIgnoreCase(currentStatus)) {
@@ -208,6 +223,9 @@ public class KurirView extends JFrame {
         }
 
         Object[] message = {
+                "No KTP:", noKtpField,
+                "No SIM:", noSimField,
+                "NPWP:", npwpField,
                 "Nama:", namaField,
                 "Jenis Kelamin:", lakiButton, perempuanButton,
                 "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
@@ -249,17 +267,33 @@ public class KurirView extends JFrame {
                 return;
             }
 
-            Kurir kurir = new Kurir(
-                    id,
-                    namaField.getText(),
-                    newJenisKelamin,
-                    java.sql.Date.valueOf(tanggalLahirField.getText()),
-                    noHPField.getText(),
-                    alamatField.getText(),
-                    imageField.getText(),
-                    newStatus);
-            controller.updateKurir(kurir);
-            JOptionPane.showMessageDialog(null, "Data berhasil diperbarui!");
+            // Validasi angka untuk noKTP, noSIM, dan NPWP
+            try {
+                int noKtp = Integer.parseInt(noKtpField.getText());
+                int noSim = Integer.parseInt(noSimField.getText());
+                int npwp = Integer.parseInt(npwpField.getText());
+
+                // Membuat objek Kurir
+                Kurir kurir = new Kurir(
+                        id,
+                        noKtp,
+                        noSim,
+                        npwp,
+                        namaField.getText(),
+                        newJenisKelamin,
+                        java.sql.Date.valueOf(tanggalLahirField.getText()),
+                        noHPField.getText(),
+                        alamatField.getText(),
+                        imageField.getText(),
+                        newStatus);
+
+                // Update data ke database
+                controller.updateKurir(kurir);
+                JOptionPane.showMessageDialog(null, "Data berhasil diperbarui!");
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "No KTP, No SIM, dan NPWP harus berupa angka!");
+                return;
+            }
         }
 
         refreshTable(table);
@@ -268,22 +302,26 @@ public class KurirView extends JFrame {
     // REFRESH
     private void refreshTable(JTable table) {
         List<Kurir> kurirList = controller.getAllKurir();
-        Object[][] data = new Object[kurirList.size()][8];
+        Object[][] data = new Object[kurirList.size()][11];
 
         for (int i = 0; i < kurirList.size(); i++) {
             Kurir kurir = kurirList.get(i);
             data[i][0] = kurir.getIdKurir();
-            data[i][1] = kurir.getNamaKurir();
-            data[i][2] = kurir.getJenisKelamin();
-            data[i][3] = kurir.getTanggalLahir();
-            data[i][4] = kurir.getNoHP();
-            data[i][5] = kurir.getAlamat();
-            data[i][6] = kurir.getImage();
-            data[i][7] = kurir.getStatus();
+            data[i][1] = kurir.getNoKtp();
+            data[i][2] = kurir.getNoSim();
+            data[i][3] = kurir.getNpwp();
+            data[i][4] = kurir.getNamaKurir();
+            data[i][5] = kurir.getJenisKelamin();
+            data[i][6] = kurir.getTanggalLahir();
+            data[i][7] = kurir.getNoHP();
+            data[i][8] = kurir.getAlamat();
+            data[i][9] = kurir.getImage();
+            data[i][10] = kurir.getStatus();
         }
 
         table.setModel(new javax.swing.table.DefaultTableModel(data, new String[] {
-                "ID", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image", "Status"
+                "ID", "No KTP", "No SIM", "NPWP", "Nama", "Jenis Kelamin", "Tanggal Lahir", "No HP", "Alamat", "Image",
+                "Status"
         }));
     }
 

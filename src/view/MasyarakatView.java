@@ -72,7 +72,7 @@ public class MasyarakatView extends JFrame {
         deleteButton.addActionListener(e -> deleteMasyarakat(table));
 
         JButton exportPdfButton = new JButton("Export PDF");
-        exportPdfButton.addActionListener(e -> exportToPdf());
+        // exportPdfButton.addActionListener(e -> exportToPdf());
 
         JButton kembaliButton = new JButton("Kembali");
         kembaliButton.addActionListener(e -> kembaliKeMainFrame());
@@ -317,61 +317,61 @@ public class MasyarakatView extends JFrame {
     }
 
     // PDF REPORT
-    private void exportToPdf() {
-        List<Masyarakat> masyarakatList = controller.getAllMasyarakat();
-        if (masyarakatList.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Tidak ada data untuk diekspor!");
-            return;
-        }
+    // private void exportToPdf() {
+    // List<Masyarakat> masyarakatList = controller.getAllMasyarakat();
+    // if (masyarakatList.isEmpty()) {
+    // JOptionPane.showMessageDialog(this, "Tidak ada data untuk diekspor!");
+    // return;
+    // }
 
-        try {
-            Document document = new Document(PageSize.A4);
-            String outputPath = System.getProperty("user.dir") + "/data_masyarakat.pdf";
-            PdfWriter.getInstance(document, new FileOutputStream(outputPath));
+    // try {
+    // Document document = new Document(PageSize.A4);
+    // String outputPath = System.getProperty("user.dir") + "/data_masyarakat.pdf";
+    // PdfWriter.getInstance(document, new FileOutputStream(outputPath));
 
-            document.open();
-            document.add(new Paragraph("Laporan Data Masyarakat",
-                    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
-            document.add(new Paragraph(" "));
+    // document.open();
+    // document.add(new Paragraph("Laporan Data Masyarakat",
+    // FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
+    // document.add(new Paragraph(" "));
 
-            PdfPTable table = new PdfPTable(8); // Delapan kolom
-            table.setWidthPercentage(100);
-            table.setSpacingBefore(10f);
-            table.setSpacingAfter(10f);
-            table.setWidths(new float[] { 1f, 2f, 1.5f, 1.5f, 2f, 3f, 2f, 1.5f });
+    // PdfPTable table = new PdfPTable(8); // Delapan kolom
+    // table.setWidthPercentage(100);
+    // table.setSpacingBefore(10f);
+    // table.setSpacingAfter(10f);
+    // table.setWidths(new float[] { 1f, 2f, 1.5f, 1.5f, 2f, 3f, 2f, 1.5f });
 
-            // Header tabel
-            table.addCell("ID");
-            table.addCell("Nama");
-            table.addCell("Jenis Kelamin");
-            table.addCell("Tanggal Lahir");
-            table.addCell("No HP");
-            table.addCell("Alamat");
-            table.addCell("Image");
-            table.addCell("Status");
+    // // Header tabel
+    // table.addCell("ID");
+    // table.addCell("Nama");
+    // table.addCell("Jenis Kelamin");
+    // table.addCell("Tanggal Lahir");
+    // table.addCell("No HP");
+    // table.addCell("Alamat");
+    // table.addCell("Image");
+    // table.addCell("Status");
 
-            // Isi tabel
-            for (Masyarakat masyarakat : masyarakatList) {
-                table.addCell(String.valueOf(masyarakat.getIdMasyarakat()));
-                table.addCell(masyarakat.getNamaMasyarakat());
-                table.addCell(masyarakat.getJenisKelamin());
-                table.addCell(masyarakat.getTanggalLahir().toString());
-                table.addCell(masyarakat.getNoHP());
-                table.addCell(masyarakat.getAlamat());
-                table.addCell(masyarakat.getImage());
-                table.addCell(masyarakat.getStatus());
-            }
+    // // Isi tabel
+    // for (Masyarakat masyarakat : masyarakatList) {
+    // table.addCell(String.valueOf(masyarakat.getIdMasyarakat()));
+    // table.addCell(masyarakat.getNamaMasyarakat());
+    // table.addCell(masyarakat.getJenisKelamin());
+    // table.addCell(masyarakat.getTanggalLahir().toString());
+    // table.addCell(masyarakat.getNoHP());
+    // table.addCell(masyarakat.getAlamat());
+    // table.addCell(masyarakat.getImage());
+    // table.addCell(masyarakat.getStatus());
+    // }
 
-            document.add(table);
-            document.close();
+    // document.add(table);
+    // document.close();
 
-            JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " +
-                    outputPath);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " +
-                    e.getMessage());
-        }
-    }
+    // JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " +
+    // outputPath);
+    // } catch (Exception e) {
+    // JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " +
+    // e.getMessage());
+    // }
+    // }
 
     // Kembali ke main frame
     private void kembaliKeMainFrame() {
