@@ -11,12 +11,11 @@ import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import java.io.FileOutputStream;
-import java.awt.Font;
 
 public class BerkasView extends JFrame {
 
     private JTable berkasTable;
-    private JButton addButton, updateButton, deleteButton, loadButton;
+    private JButton addButton, updateButton, deleteButton;
     private BerkasController controller;
 
     public BerkasView() {
@@ -35,121 +34,120 @@ public class BerkasView extends JFrame {
         // Button Panel
         JPanel buttonPanel = new JPanel();
         addButton = new JButton("Tambah");
-        updateButton = new JButton("Update");
+        updateButton = new JButton("Edit");
         deleteButton = new JButton("Hapus");
         JButton exportButton = new JButton("Export PDF");
-
-        loadButton = new JButton("Refresh");
         JButton kembaliButton = new JButton("Kembali");
         kembaliButton.addActionListener(e -> kembaliKeMainFrame());
 
         buttonPanel.add(addButton);
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
-        buttonPanel.add(loadButton);
         buttonPanel.add(exportButton);
         buttonPanel.add(kembaliButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
 
         // Event Listeners
-        addButton.addActionListener(e -> showInputDialog("Tambah", null));
-        updateButton.addActionListener(e -> {
-            int selectedRow = berkasTable.getSelectedRow();
-            if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(this, "Pilih baris untuk diupdate!");
-                return;
-            }
-            BerkasKurir selectedBerkas = getSelectedBerkas(selectedRow);
-            showInputDialog("Update", selectedBerkas);
-        });
+        addButton.addActionListener(e -> addBerkas());
+        updateButton.addActionListener(e -> updateBerkas());
         deleteButton.addActionListener(e -> deleteBerkas());
-        loadButton.addActionListener(e -> loadData());
         exportButton.addActionListener(e -> exportToPdf());
 
         // Load data saat aplikasi dimulai
-        loadData();
+        refreshTable();
 
         setVisible(true);
     }
 
-    private void showInputDialog(String action, BerkasKurir berkas) {
+    private void addBerkas() {
         JComboBox<Integer> idKurirComboBox = new JComboBox<>();
         JTextField idKtpField = new JTextField();
         JTextField idSimField = new JTextField();
-        JComboBox<String> statusComboBox = new JComboBox<>(new String[] { "Aktif", "Non-Aktif" });
 
-        // Load ID Kurir ke ComboBox
         loadKurirData(idKurirComboBox);
 
-        // Isi field dengan data yang dipilih
-        if (berkas != null) {
-            idKurirComboBox.setSelectedItem(berkas.getIdKurir());
-            idKtpField.setText(berkas.getIdKtp());
-            idSimField.setText(berkas.getIdSim());
-            statusComboBox.setSelectedItem(berkas.getStatus());
-        }
+        Object[] inputFields = {
+                "ID Kurir:", idKurirComboBox,
+                "ID KTP:", idKtpField,
+                "ID SIM:", idSimField
+        };
 
-        // Panel untuk input form
-        JPanel inputPanel = new JPanel(new GridLayout(5, 2, 5, 5));
-        inputPanel.add(new JLabel("ID Kurir:"));
-        inputPanel.add(idKurirComboBox);
-        inputPanel.add(new JLabel("ID KTP:"));
-        inputPanel.add(idKtpField);
-        inputPanel.add(new JLabel("ID SIM:"));
-        inputPanel.add(idSimField);
-
-        if ("Update".equals(action)) { // input status hanya untuk Update
-            inputPanel.add(new JLabel("Status:"));
-            inputPanel.add(statusComboBox);
-        }
-
+        UIManager.put("OptionPane.okButtonText", "Simpan");
         int option = JOptionPane.showConfirmDialog(
                 this,
-                inputPanel,
-                action + " Berkas",
+                inputFields,
+                "Tambah Berkas",
                 JOptionPane.OK_CANCEL_OPTION);
 
         if (option == JOptionPane.OK_OPTION) {
             try {
-                // Validasi data menggunakan controller
                 controller.validateBerkasData(idKtpField.getText(), idSimField.getText());
 
-                String status = "Pending"; // Default
-                if ("Update".equals(action)) {
-                    status = (String) statusComboBox.getSelectedItem();
-                }
-
-                BerkasKurir newBerkas = new BerkasKurir(
-                        0, // ID Berkas otomatis
+                BerkasKurir berkas = new BerkasKurir(
+                        0, // ID otomatis
                         idKtpField.getText(),
                         idSimField.getText(),
-                        status,
+                        "Pending", // Default status
                         (Integer) idKurirComboBox.getSelectedItem());
 
-                if ("Tambah".equals(action)) {
-                    controller.insertBerkas(newBerkas);
-                    JOptionPane.showMessageDialog(this, "Berkas berhasil ditambahkan");
-                } else if ("Update".equals(action)) {
-                    newBerkas.setIdBerkas(berkas.getIdBerkas());
-                    controller.updateBerkas(newBerkas);
-                    JOptionPane.showMessageDialog(this, "Berkas berhasil diperbarui.");
-                }
-
-                loadData();
+                controller.insertBerkas(berkas);
+                JOptionPane.showMessageDialog(this, "Berkas berhasil ditambahkan!");
+                refreshTable();
             } catch (IllegalArgumentException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
-    private BerkasKurir getSelectedBerkas(int selectedRow) {
-        return new BerkasKurir(
-                Integer.parseInt(berkasTable.getValueAt(selectedRow, 0).toString()),
-                berkasTable.getValueAt(selectedRow, 2).toString(),
-                berkasTable.getValueAt(selectedRow, 3).toString(),
-                berkasTable.getValueAt(selectedRow, 4).toString(),
-                Integer.parseInt(berkasTable.getValueAt(selectedRow, 1).toString()));
+    private void updateBerkas() {
+        int selectedRow = berkasTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih baris untuk diupdate!");
+            return;
+        }
+
+        BerkasKurir selectedBerkas = getSelectedBerkas(selectedRow);
+
+        JComboBox<Integer> idKurirComboBox = new JComboBox<>();
+        JTextField idKtpField = new JTextField(selectedBerkas.getIdKtp());
+        JTextField idSimField = new JTextField(selectedBerkas.getIdSim());
+        JComboBox<String> statusComboBox = new JComboBox<>(new String[] { "Aktif", "Non-Aktif" });
+
+        loadKurirData(idKurirComboBox);
+        idKurirComboBox.setSelectedItem(selectedBerkas.getIdKurir());
+        statusComboBox.setSelectedItem(selectedBerkas.getStatus());
+
+        Object[] inputFields = {
+                "ID Kurir:", idKurirComboBox,
+                "ID KTP:", idKtpField,
+                "ID SIM:", idSimField,
+                "Status:", statusComboBox
+        };
+
+        UIManager.put("OptionPane.okButtonText", "Simpan");
+        int option = JOptionPane.showConfirmDialog(
+                this,
+                inputFields,
+                "Update Berkas",
+                JOptionPane.OK_CANCEL_OPTION);
+
+        if (option == JOptionPane.OK_OPTION) {
+            try {
+                controller.validateBerkasData(idKtpField.getText(), idSimField.getText());
+
+                selectedBerkas.setIdKurir((Integer) idKurirComboBox.getSelectedItem());
+                selectedBerkas.setIdKtp(idKtpField.getText());
+                selectedBerkas.setIdSim(idSimField.getText());
+                selectedBerkas.setStatus((String) statusComboBox.getSelectedItem());
+
+                controller.updateBerkas(selectedBerkas);
+                JOptionPane.showMessageDialog(this, "Berkas berhasil diperbarui!");
+                refreshTable();
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     private void deleteBerkas() {
@@ -158,25 +156,22 @@ public class BerkasView extends JFrame {
             JOptionPane.showMessageDialog(this, "Pilih baris untuk dihapus!");
             return;
         }
-        int idBerkas = Integer.parseInt(berkasTable.getValueAt(selectedRow, 0).toString());
-        controller.deleteBerkas(idBerkas);
-        JOptionPane.showMessageDialog(this, "Berkas berhasil dihapus.");
-        loadData();
-    }
 
-    private void loadKurirData(JComboBox<Integer> comboBox) {
-        comboBox.removeAllItems();
-        try {
-            List<Integer> kurirIds = controller.getKurirIds();
-            for (Integer id : kurirIds) {
-                comboBox.addItem(id);
-            }
-        } catch (RuntimeException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        int idBerkas = Integer.parseInt(berkasTable.getValueAt(selectedRow, 0).toString());
+        int option = JOptionPane.showConfirmDialog(
+                this,
+                "Apakah Anda yakin ingin menghapus berkas ini?",
+                "Hapus Berkas",
+                JOptionPane.YES_NO_OPTION);
+
+        if (option == JOptionPane.YES_OPTION) {
+            controller.deleteBerkas(idBerkas);
+            JOptionPane.showMessageDialog(this, "Berkas berhasil dihapus!");
+            refreshTable();
         }
     }
 
-    private void loadData() {
+    private void refreshTable() {
         DefaultTableModel model = new DefaultTableModel(
                 new String[] { "ID Berkas", "ID Kurir", "ID KTP", "ID SIM", "Status" }, 0);
         List<BerkasKurir> berkasList = controller.getAllBerkas();
@@ -191,61 +186,74 @@ public class BerkasView extends JFrame {
         }
         berkasTable.setModel(model);
     }
-    
-    // PDF REPORT
-    // PDF REPORT
-private void exportToPdf() {
-    List<BerkasKurir> berkasList = controller.getAllBerkas();
-    if (berkasList.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Tidak ada data untuk diekspor!");
-        return;
+
+    private BerkasKurir getSelectedBerkas(int selectedRow) {
+        return new BerkasKurir(
+                Integer.parseInt(berkasTable.getValueAt(selectedRow, 0).toString()),
+                berkasTable.getValueAt(selectedRow, 2).toString(),
+                berkasTable.getValueAt(selectedRow, 3).toString(),
+                berkasTable.getValueAt(selectedRow, 4).toString(),
+                Integer.parseInt(berkasTable.getValueAt(selectedRow, 1).toString()));
     }
 
-    try {
-        // Membuat dokumen PDF
-        Document document = new Document(PageSize.A4);
-        String outputPath = System.getProperty("user.dir") + "/data_berkas.pdf";
-        PdfWriter.getInstance(document, new FileOutputStream(outputPath));
+    private void loadKurirData(JComboBox<Integer> comboBox) {
+        comboBox.removeAllItems();
+        try {
+            List<Integer> kurirIds = controller.getKurirIds();
+            for (Integer id : kurirIds) {
+                comboBox.addItem(id);
+            }
+        } catch (RuntimeException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
-        document.open();
-        document.add(new Paragraph("Laporan Data Berkas", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
-        document.add(new Paragraph(" "));
-
-        // Membuat tabel untuk data berkas
-        PdfPTable table = new PdfPTable(5); // Lima kolom
-        table.setWidthPercentage(100);
-        table.setSpacingBefore(10f);
-        table.setSpacingAfter(10f);
-        table.setWidths(new float[]{1f, 1.5f, 2f, 2f, 1.5f});
-
-        // Header tabel
-        table.addCell("ID Berkas");
-        table.addCell("ID Kurir");
-        table.addCell("ID KTP");
-        table.addCell("ID SIM");
-        table.addCell("Status");
-
-        // Isi tabel dengan data berkas
-        for (BerkasKurir berkas : berkasList) {
-            table.addCell(String.valueOf(berkas.getIdBerkas()));
-            table.addCell(String.valueOf(berkas.getIdKurir()));
-            table.addCell(berkas.getIdKtp());
-            table.addCell(berkas.getIdSim());
-            table.addCell(berkas.getStatus());
+    private void exportToPdf() {
+        List<BerkasKurir> berkasList = controller.getAllBerkas();
+        if (berkasList.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Tidak ada data untuk diekspor!");
+            return;
         }
 
-        // Menambahkan tabel ke dokumen
-        document.add(table);
-        document.close();
+        try {
+            Document document = new Document(PageSize.A4);
+            String outputPath = System.getProperty("user.dir") + "/data_berkas.pdf";
+            PdfWriter.getInstance(document, new FileOutputStream(outputPath));
 
-        // Pesan keberhasilan
-        JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " + outputPath);
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " + e.getMessage());
+            document.open();
+            document.add(new Paragraph("Laporan Data Berkas",
+                    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
+            document.add(new Paragraph(" "));
+
+            PdfPTable table = new PdfPTable(5); // Lima kolom
+            table.setWidthPercentage(100);
+            table.setSpacingBefore(10f);
+            table.setSpacingAfter(10f);
+            table.setWidths(new float[] { 1f, 1.5f, 2f, 2f, 1.5f });
+
+            table.addCell("ID Berkas");
+            table.addCell("ID Kurir");
+            table.addCell("ID KTP");
+            table.addCell("ID SIM");
+            table.addCell("Status");
+
+            for (BerkasKurir berkas : berkasList) {
+                table.addCell(String.valueOf(berkas.getIdBerkas()));
+                table.addCell(String.valueOf(berkas.getIdKurir()));
+                table.addCell(berkas.getIdKtp());
+                table.addCell(berkas.getIdSim());
+                table.addCell(berkas.getStatus());
+            }
+
+            document.add(table);
+            document.close();
+
+            JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " + outputPath);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " + e.getMessage());
+        }
     }
-}
 
-    // Kembali ke main frame
     private void kembaliKeMainFrame() {
         this.dispose();
         SwingUtilities.invokeLater(() -> {
