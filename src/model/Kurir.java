@@ -4,6 +4,9 @@ import java.util.Date;
 
 public class Kurir {
     private int idKurir;
+    private int noKtp;
+    private int noSim;
+    private int npwp;
     private String namaKurir;
     private String jenisKelamin;
     private Date tanggalLahir;
@@ -12,8 +15,13 @@ public class Kurir {
     private String image;
     private String status;
 
-    public Kurir(int idKurir, String namaKurir, String jenisKelamin, Date tanggalLahir, String noHP, String alamat, String image, String status) {
+    public Kurir(int idKurir, int noKtp, int noSim, int npwp, String namaKurir, String jenisKelamin, Date tanggalLahir,
+            String noHP, String alamat,
+            String image, String status) {
         this.idKurir = idKurir;
+        this.noKtp = noKtp;
+        this.noSim = noSim;
+        this.npwp = npwp;
         this.namaKurir = namaKurir;
         this.jenisKelamin = jenisKelamin;
         this.tanggalLahir = tanggalLahir;
@@ -29,6 +37,30 @@ public class Kurir {
 
     public void setIdKurir(int idKurir) {
         this.idKurir = idKurir;
+    }
+
+    public int getNoKtp() {
+        return noKtp;
+    }
+
+    public void setNoKtp(int noKtp) {
+        this.noKtp = noKtp;
+    }
+
+    public int getNoSim() {
+        return noSim;
+    }
+
+    public void setNoSim(int noSim) {
+        this.noSim = noSim;
+    }
+
+    public int getNpwp() {
+        return npwp;
+    }
+
+    public void setNpwp(int npwp) {
+        this.npwp = npwp;
     }
 
     public String getNamaKurir() {
@@ -86,5 +118,5 @@ public class Kurir {
     public void setStatus(String status) {
         this.status = status;
     }
-    
+
 }

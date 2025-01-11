@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.*;
 public interface KurirMapper {
 
     // CREATE: Menambahkan data baru ke tabel kurir
-    @Insert("INSERT INTO kurir (idKurir, namaKurir, jenisKelamin, tanggalLahir, noHP, alamat, image, status) VALUES (#{idKurir}, #{namaKurir}, #{jenisKelamin}, #{tanggalLahir}, #{noHP}, #{alamat}, #{image}, #{status})")
+    @Insert("INSERT INTO kurir (idKurir, noKtp, noSim, npwp, namaKurir, jenisKelamin, tanggalLahir, noHP, alamat, image, status) VALUES (#{idKurir},#{noKtp}, #{noSim}, #{npwp}, #{namaKurir}, #{jenisKelamin}, #{tanggalLahir}, #{noHP}, #{alamat}, #{image}, #{status})")
     void insertKurir(Kurir kurir);
 
     // READ: Mengambil semua data dari tabel kurir
@@ -18,7 +18,7 @@ public interface KurirMapper {
     Kurir getKurirById(@Param("idKurir") int idKurir);
 
     // UPDATE: Memperbarui data kurir berdasarkan ID
-    @Update("UPDATE kurir SET namaKurir = #{namaKurir}, jenisKelamin = #{jenisKelamin}, tanggalLahir = #{tanggalLahir}, noHP = #{noHP}, alamat = #{alamat}, image = #{image}, status = #{status} WHERE idKurir = #{idKurir}")
+    @Update("UPDATE kurir SET noKtp = #{noKtp}, noSim = #{noSim}, npwp = #{npwp}, namaKurir = #{namaKurir}, jenisKelamin = #{jenisKelamin}, tanggalLahir = #{tanggalLahir}, noHP = #{noHP}, alamat = #{alamat}, image = #{image}, status = #{status} WHERE idKurir = #{idKurir}")
     void updateKurir(Kurir kurir);
 
     // DELETE: Menghapus data kurir berdasarkan ID

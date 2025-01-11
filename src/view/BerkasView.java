@@ -187,7 +187,6 @@ public class BerkasView extends JFrame {
         berkasTable.setModel(model);
     }
 
-
     private BerkasKurir getSelectedBerkas(int selectedRow) {
         return new BerkasKurir(
                 Integer.parseInt(berkasTable.getValueAt(selectedRow, 0).toString()),
@@ -209,7 +208,6 @@ public class BerkasView extends JFrame {
         }
     }
 
-
     // PDF REPORT
 
     private void exportToPdf() {
@@ -229,7 +227,7 @@ public class BerkasView extends JFrame {
             document.add(new Paragraph("Laporan Data Berkas",
                     FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
             document.add(new Paragraph(" "));
-          
+
             // Membuat tabel untuk data berkas
             PdfPTable table = new PdfPTable(5); // Lima kolom
             table.setWidthPercentage(100);
@@ -244,7 +242,6 @@ public class BerkasView extends JFrame {
             table.addCell("ID SIM");
             table.addCell("Status");
 
-
             // Isi tabel dengan data berkas
             for (BerkasKurir berkas : berkasList) {
                 table.addCell(String.valueOf(berkas.getIdBerkas()));
@@ -257,9 +254,11 @@ public class BerkasView extends JFrame {
             document.add(table);
             document.close();
 
-            JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " + outputPath);
+            JOptionPane.showMessageDialog(this, "Laporan berhasil disimpan di: " +
+                    outputPath);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Gagal membuat laporan: " +
+                    e.getMessage());
         }
     }
 
