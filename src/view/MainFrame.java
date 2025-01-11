@@ -100,27 +100,6 @@ public class MainFrame extends JFrame {
         });
 
         kurirButton.addActionListener(e -> {
-            showKurir(pendaftaranFrame, panel);
-        });
-
-        pendaftaranFrame.add(panel);
-        pendaftaranFrame.setVisible(true);
-    }
-
-    private void showKurir(JFrame pendaftaranFrame, JPanel panel) {
-        panel.removeAll();
-
-        JButton persetujuanButton = createButton("Persetujuan");
-        JButton verifikasiButton = createButton("Verifikasi");
-
-        panel.add(persetujuanButton);
-        panel.add(verifikasiButton);
-
-        // Atur ulang layout panel
-        panel.revalidate();
-        panel.repaint();
-
-        persetujuanButton.addActionListener(evt -> {
             pendaftaranFrame.dispose();
             SwingUtilities.invokeLater(() -> {
                 KurirView kurirView = new KurirView();
@@ -128,15 +107,40 @@ public class MainFrame extends JFrame {
             });
         });
 
-        verifikasiButton.addActionListener(evt -> {
-            this.dispose();
-            pendaftaranFrame.dispose();
-            SwingUtilities.invokeLater(() -> {
-                BerkasView berkasView = new BerkasView();
-                berkasView.setVisible(true);
-            });
-        });
+        pendaftaranFrame.add(panel);
+        pendaftaranFrame.setVisible(true);
     }
+
+    // private void showKurir(JFrame pendaftaranFrame, JPanel panel) {
+    //     panel.removeAll();
+
+    //     JButton persetujuanButton = createButton("Persetujuan");
+    //     JButton verifikasiButton = createButton("Verifikasi");
+
+    //     panel.add(persetujuanButton);
+    //     panel.add(verifikasiButton);
+
+    //     // Atur ulang layout panel
+    //     panel.revalidate();
+    //     panel.repaint();
+
+    //     persetujuanButton.addActionListener(evt -> {
+    //         pendaftaranFrame.dispose();
+    //         SwingUtilities.invokeLater(() -> {
+    //             KurirView kurirView = new KurirView();
+    //             kurirView.setVisible(true);
+    //         });
+    //     });
+
+    //     verifikasiButton.addActionListener(evt -> {
+    //         this.dispose();
+    //         pendaftaranFrame.dispose();
+    //         SwingUtilities.invokeLater(() -> {
+    //             BerkasView berkasView = new BerkasView();
+    //             berkasView.setVisible(true);
+    //         });
+    //     });
+    // }
 
     private void showPengelolaanSampah() {
         this.dispose();

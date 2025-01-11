@@ -44,13 +44,13 @@ public class KonversiPoin extends JFrame {
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         // Footer
-        JButton addButton = new JButton("Tambah Data");
+        JButton addButton = new JButton("Tambah");
         addButton.addActionListener(e -> showAddDialog());
 
-        JButton editButton = new JButton("Edit Data");
+        JButton editButton = new JButton("Edit");
         editButton.addActionListener(e -> editSelectedRow());
 
-        JButton deleteButton = new JButton("Hapus Data");
+        JButton deleteButton = new JButton("Hapus");
         deleteButton.addActionListener(e -> deleteSelectedRow());
 
         JButton exportPdfButton = new JButton("Export PDF");

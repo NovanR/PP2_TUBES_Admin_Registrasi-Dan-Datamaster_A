@@ -116,28 +116,23 @@ public class KurirView extends JFrame {
         statusGroup.add(tolakButton);
 
         Object[] message = {
-                "No KTP:", noKtpField,
-                "No SIM:", noSimField,
-                "NPWP:", npwpField,
+                "No KTP: (Masukan 16 Angka)", noKtpField,
+                "No SIM: (Masukan 12 Angka)", noSimField,
+                "NPWP: (Masukan 16 Angka)", npwpField,
                 "Nama:", namaField,
                 "Jenis Kelamin:", lakiButton, perempuanButton,
                 "Tanggal Lahir (YYYY-MM-DD):", tanggalLahirField,
                 "No HP:", noHPField,
                 "Alamat:", alamatField,
-                "Image Path:", imageField
+                "Image Path: (Format Image png/jpg)", imageField
         };
 
         UIManager.put("OptionPane.okButtonText", "Simpan");
+        UIManager.put("OptionPane.cancleButtonText", "Batal");
         int option = JOptionPane.showConfirmDialog(null, message, "Add Kurir", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             String jenisKelamin = lakiButton.isSelected() ? "Laki-laki"
                     : perempuanButton.isSelected() ? "Perempuan" : "";
-            String status = terimaButton.isSelected() ? "DISETUJUI" : tolakButton.isSelected() ? "DITOLAK" : "";
-
-            if (jenisKelamin.isEmpty() || status.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Silakan lengkapi semua pilihan!");
-                return;
-            }
 
             // Validasi Nama
             if (!namaField.getText().matches("[a-zA-Z\\s]+")) {
@@ -150,6 +145,24 @@ public class KurirView extends JFrame {
                 java.sql.Date.valueOf(tanggalLahirField.getText()); // Validasi format tanggal
             } catch (IllegalArgumentException ex) {
                 JOptionPane.showMessageDialog(null, "Tanggal lahir harus dalam format YYYY-MM-DD!");
+                return;
+            }
+
+            // Validasi No KTP
+            if (!noKtpField.getText().matches("\\d{16}")) {
+                JOptionPane.showMessageDialog(null, "No KTP harus berisi 16 digit angka!");
+                return;
+            }
+
+            // Validasi No SIM
+            if (!noSimField.getText().matches("\\d{12}")) {
+                JOptionPane.showMessageDialog(null, "No SIM harus berisi 12 digit angka!");
+                return;
+            }
+
+            // Validasi NPWP
+            if (!npwpField.getText().matches("\\d{16}")) {
+                JOptionPane.showMessageDialog(null, "NPWP harus berisi 16 digit angka!");
                 return;
             }
 
@@ -188,11 +201,23 @@ public class KurirView extends JFrame {
 
         int id = (int) table.getValueAt(selectedRow, 0);
         JTextField noKtpField = new JTextField(String.valueOf(table.getValueAt(selectedRow, 1)));
+        noKtpField.setEnabled(false);
+
         JTextField noSimField = new JTextField(String.valueOf(table.getValueAt(selectedRow, 2)));
+        noSimField.setEnabled(false);
+
         JTextField npwpField = new JTextField(String.valueOf(table.getValueAt(selectedRow, 3)));
+        npwpField.setEnabled(false);
+
         JTextField namaField = new JTextField((String) table.getValueAt(selectedRow, 4));
+        namaField.setEnabled(false);
+
         JRadioButton lakiButton = new JRadioButton("Laki-laki");
+        lakiButton.setEnabled(false);
+
         JRadioButton perempuanButton = new JRadioButton("Perempuan");
+        perempuanButton.setEnabled(false);
+        
         ButtonGroup genderGroup = new ButtonGroup();
         genderGroup.add(lakiButton);
         genderGroup.add(perempuanButton);
@@ -205,9 +230,16 @@ public class KurirView extends JFrame {
         }
 
         JTextField tanggalLahirField = new JTextField(table.getValueAt(selectedRow, 6).toString());
+        tanggalLahirField.setEnabled(false);
+
         JTextField noHPField = new JTextField((String) table.getValueAt(selectedRow, 7));
+        noHPField.setEnabled(false);
+
         JTextField alamatField = new JTextField((String) table.getValueAt(selectedRow, 8));
+        alamatField.setEnabled(false);
+
         JTextField imageField = new JTextField((String) table.getValueAt(selectedRow, 9));
+        imageField.setEnabled(false);
 
         JRadioButton terimaButton = new JRadioButton("DISETUJUI");
         JRadioButton tolakButton = new JRadioButton("DITOLAK");
@@ -236,6 +268,7 @@ public class KurirView extends JFrame {
         };
 
         UIManager.put("OptionPane.okButtonText", "Simpan");
+        UIManager.put("OptionPane.cancelButtonText", "Batal");
         int option = JOptionPane.showConfirmDialog(null, message, "Update Kurir", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             String newJenisKelamin = lakiButton.isSelected() ? "Laki-laki"
@@ -361,14 +394,17 @@ public class KurirView extends JFrame {
                     FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
             document.add(new Paragraph(" "));
 
-            PdfPTable table = new PdfPTable(8); // Delapan kolom
+            PdfPTable table = new PdfPTable(11); // Delapan kolom
             table.setWidthPercentage(100);
             table.setSpacingBefore(10f);
             table.setSpacingAfter(10f);
-            table.setWidths(new float[] { 1f, 2f, 1.5f, 2f, 2f, 2f, 2f, 1f });
+            table.setWidths(new float[] { 1f, 2f, 2f, 2f, 2f, 1.5f, 2f, 2f, 2f, 2f, 1f });
 
             // Header tabel
             table.addCell("ID");
+            table.addCell("No KTP");
+            table.addCell("No SIM");
+            table.addCell("NPWP");
             table.addCell("Nama");
             table.addCell("Jenis Kelamin");
             table.addCell("Tanggal Lahir");
@@ -380,6 +416,9 @@ public class KurirView extends JFrame {
             // Isi tabel
             for (Kurir kurir : kurirList) {
                 table.addCell(String.valueOf(kurir.getIdKurir()));
+                table.addCell(String.valueOf(kurir.getNoKtp()));
+                table.addCell(String.valueOf(kurir.getNoSim()));
+                table.addCell(String.valueOf(kurir.getNpwp()));
                 table.addCell(kurir.getNamaKurir());
                 table.addCell(kurir.getJenisKelamin());
                 table.addCell(kurir.getTanggalLahir().toString());
