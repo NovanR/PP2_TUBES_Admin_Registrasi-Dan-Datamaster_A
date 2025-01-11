@@ -146,10 +146,6 @@ public class SampahView extends JFrame {
         if (option == JOptionPane.OK_OPTION) {
             try {
                 // Validasi input
-                if (!idSampahField.getText().matches("\\d+")) {
-                    JOptionPane.showMessageDialog(this, "ID Sampah harus berupa angka!");
-                    return;
-                }
                 if (!kategoriField.getText().matches("[a-zA-Z\\s]+$")) {
                     JOptionPane.showMessageDialog(this, "Kategori sampah hanya boleh mengandung huruf dan spasi!");
                     return;
