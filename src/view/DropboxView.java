@@ -34,7 +34,6 @@ public class DropboxView extends JFrame {
         mainPanel.add(headerLabel, BorderLayout.NORTH);
 
         // Table
-        String[] columnNames = { "ID", "Nama", "No HP", "Alamat" };
         JTable table = new JTable();
         refreshTable(table);
         JScrollPane scrollPane = new JScrollPane(table);
@@ -70,8 +69,6 @@ public class DropboxView extends JFrame {
         footerPanel.add(updateButton);
         footerPanel.add(deleteButton);
         footerPanel.add(exportPdfButton);
-
-        // footerPanel.add(refreshButton);
         footerPanel.add(kembaliButton);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
